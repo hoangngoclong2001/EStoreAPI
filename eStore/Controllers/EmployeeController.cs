@@ -124,7 +124,7 @@ namespace eStore.Controllers
         public IActionResult Status(int id)
         {
             var conn = $"api/Employees/{id}";
-            var Res = ResponseConfig.GetData(conn).Result;
+            var Res = GetData(conn).Result;
             var emp = JsonConvert.DeserializeObject<EmpRes>(Res.Content.ReadAsStringAsync().Result);
             EmpReq req = new EmpReq
             {
@@ -154,7 +154,6 @@ namespace eStore.Controllers
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies["accessToken"]);
             }
-
             var Response = await client.GetAsync(targetAddress);
             return Response;
         }

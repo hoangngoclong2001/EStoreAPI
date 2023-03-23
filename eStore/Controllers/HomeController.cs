@@ -15,7 +15,10 @@ using System.Net.Http.Headers;
 namespace eStore.Controllers;
 
 public class HomeController : Controller
+
 {
+    private static readonly string BaseUrl = "https://localhost:7177/";
+
     private readonly IConfiguration configuration;
     public HomeController(IConfiguration configuration)
     {
@@ -61,10 +64,6 @@ public class HomeController : Controller
         ViewBag.productSales = productSales;
         return View(products);
     }
-    public IActionResult Login()
-    {
-        return View();
-    }
     public IActionResult Profile()
     {
         return View();
@@ -104,11 +103,36 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet]
+    public IActionResult Login()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]) && !string.IsNullOrEmpty(HttpContext.Request.Cookies["refreshToken"]))
+        {
+            UserRes u = new UserRes();
+            u.RefreshToken = HttpContext.Request.Cookies["refreshToken"];
+
+            var Res = PostData("api/Accounts/signin", JsonConvert.SerializeObject(u));
+            if (!Res.Result.IsSuccessStatusCode)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            var user = JsonConvert.DeserializeObject<UserRes>(Res.Result.Content.ReadAsStringAsync().Result);
+
+            HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
+
+            validateToken(user!.AccessToken!.Replace("\"", ""));
+
+            Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
+
+            return Redirect("/");
+        }
+
+        return View();
+    }
 
     [HttpPost]
     public IActionResult Login(AuthReq req)
     {
-        var Res = ResponseConfig.PostData("api/Accounts/signin", JsonConvert.SerializeObject(req));
+        var Res = PostData("api/Accounts/signin", JsonConvert.SerializeObject(req));
         if (!Res.Result.IsSuccessStatusCode)
             return StatusCode(StatusCodes.Status500InternalServerError);
 
@@ -167,5 +191,23 @@ public class HomeController : Controller
         {
             throw new Exception(ex.Message);
         }
+    }
+
+    public async Task<HttpResponseMessage> PostData(string targerAddress, string content)
+    {
+        var client = new HttpClient();
+        client.BaseAddress = new Uri(BaseUrl);
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies["accessToken"]);
+        }
+        else
+        {
+            client.DefaultRequestHeaders.Add("refreshToken", HttpContext.Request.Cookies["refreshToken"]);
+        }
+        var Response = await client.PostAsync(targerAddress, new StringContent(content, Encoding.UTF8, "application/json"));
+        return Response;
     }
 }
