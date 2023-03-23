@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using BusinessObject.Models;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eStore.Controllers;
 
@@ -68,10 +69,6 @@ public class HomeController : Controller
     {
         return View();
     }
-    public IActionResult Forgot()
-    {
-        return View();
-    }
     public IActionResult Privacy()
     {
         return View();
@@ -85,6 +82,7 @@ public class HomeController : Controller
 
         return View();
     }
+
     [HttpGet]
     [Route("/product/detail/{id}")]
     public IActionResult Detail(string id)
@@ -110,8 +108,8 @@ public class HomeController : Controller
         {
             UserRes u = new UserRes();
             u.RefreshToken = HttpContext.Request.Cookies["refreshToken"];
-
-            var Res = PostData("api/Accounts/signin", JsonConvert.SerializeObject(u));
+            var conn = $"api/Accounts/signin";
+            var Res = PostData(conn, JsonConvert.SerializeObject(u));
             if (!Res.Result.IsSuccessStatusCode)
                 return StatusCode(StatusCodes.Status500InternalServerError);
 
@@ -119,20 +117,21 @@ public class HomeController : Controller
 
             HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
 
-            validateToken(user!.AccessToken!.Replace("\"", ""));
+            ValidateToken(user!.AccessToken!.Replace("\"", ""));
 
             Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
 
             return Redirect("/");
         }
-
         return View();
     }
+
 
     [HttpPost]
     public IActionResult Login(AuthReq req)
     {
-        var Res = PostData("api/Accounts/signin", JsonConvert.SerializeObject(req));
+        var conn = $"api/Accounts/signin";
+        var Res = PostData(conn, JsonConvert.SerializeObject(req));
         if (!Res.Result.IsSuccessStatusCode)
             return StatusCode(StatusCodes.Status500InternalServerError);
 
@@ -140,20 +139,46 @@ public class HomeController : Controller
 
         HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
 
-        validateToken(user!.AccessToken!.Replace("\"", ""));
+        ValidateToken(user!.AccessToken!.Replace("\"", ""));
 
         Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions 
         { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
         return RedirectToAction("index");
     }
-    
+
+    [HttpGet]
+    public IActionResult Forgot()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Forgot(string email)
+    {
+        var conn = $"api/Accounts/reset";
+        var Res = GetData(conn);
+        if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+        return View();
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("/logout")]
+    public IActionResult signout()
+    {
+        Response.Cookies.Delete("accessToken");
+        Response.Cookies.Delete("refreshToken");
+        return RedirectToAction("index");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-    private void validateToken(string token)
+    private void ValidateToken(string token)
     {
         try
         {

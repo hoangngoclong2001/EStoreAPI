@@ -3,6 +3,7 @@ using BusinessObject.Req;
 using BusinessObject.Res;
 using DocumentFormat.OpenXml.Wordprocessing;
 using eStore.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -14,6 +15,7 @@ namespace eStore.Controllers
     {
         private readonly string BaseUrl = "https://localhost:7177/";
 
+        [Authorize(Roles = "1")]
         public IActionResult Customers([FromQuery] PaginationParams @params, string search, string title, int item)
         {
             if (@params.ItemsPerPage == 0) @params.ItemsPerPage = 10;
@@ -40,6 +42,8 @@ namespace eStore.Controllers
             ViewBag.Item = item;
             return View(customers);
         }
+
+        [Authorize(Roles = "1")]
         public IActionResult Status(string id)
         {
             var conn = $"api/Customers/{id}";

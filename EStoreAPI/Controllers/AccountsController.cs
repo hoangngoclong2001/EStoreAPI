@@ -123,6 +123,8 @@ namespace EStoreAPI.Controllers
         {
             if (request is null) return BadRequest();
             var account = await repository.Account(request);
+            if(account.Customer is not null) if(account.Customer.ContactName!.Contains("(deactive)")) return BadRequest();
+            if (account.Employee is not null) if (account.Employee.Title!.Contains("(deactive)")) return BadRequest();
             user.Account = account;
             user.AccessToken = JWTConfig.CreateToken(user, configuration);
             SetRefreshToken(JWTConfig.GenerateRefreshToken());

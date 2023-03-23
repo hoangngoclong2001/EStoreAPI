@@ -60,7 +60,9 @@ namespace DataAccess.DAO
             Account? account;
             using (var context = new PRN231DBContext())
             {
-                account = await context.Accounts.Where(a => a.Email!.Equals(req.Email) && a.Password!.Equals(req.Password)).FirstOrDefaultAsync(); ;
+                account = await context.Accounts
+                    .Where(a => a.Email!.Equals(req.Email) 
+                && a.Password!.Equals(req.Password)).Include(x => x.Customer).Include(x => x.Employee).FirstOrDefaultAsync(); ;
             }
             return account ?? new();
         }

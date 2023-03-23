@@ -13,7 +13,7 @@
 
         <div class="bodyforgot">
             <div class="mainforgot">
-            <a href="" style="margin-left:10px;">Back to login</a>
+            <a asp-action="login" style="margin-left:10px;">Back to login</a>
                 <div id="content">
                     <div id="form">
                         <h3 style="padding: 20px;">Forgot your account password?</h3>
@@ -23,8 +23,7 @@
                             password. Please enter your email below.
                             <span style="color: red;">*</span>
                         </div>
-                        <form>
-
+                        <form asp-action="forgot" method="post">
                             <input type="email" name="email" placeholder="Email" required="">
                             <button>Get Password</button>
                         </form>

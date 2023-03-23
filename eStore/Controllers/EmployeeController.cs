@@ -2,6 +2,7 @@
 using BusinessObject.Req;
 using BusinessObject.Res;
 using eStore.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Drawing;
@@ -14,6 +15,7 @@ namespace eStore.Controllers
     {
         private static readonly string BaseUrl = "https://localhost:7177/";
 
+        [Authorize(Roles = "1")]
         public IActionResult Employees(
             [FromQuery] PaginationParams @params,
             int item,
@@ -67,6 +69,7 @@ namespace eStore.Controllers
             return View(employees);
         }
 
+        [Authorize(Roles = "1")]
         public IActionResult Upload(IFormFile? file)
         {
              if (file == null) return RedirectToAction("Employees");
@@ -76,6 +79,7 @@ namespace eStore.Controllers
             return RedirectToAction("Employees");
         }
 
+        [Authorize(Roles = "1")]
         public IActionResult Edit(int id)
         {
             var conn = $"api/Employees/{id}";
@@ -89,6 +93,8 @@ namespace eStore.Controllers
             ViewData["HireDate"] = DateTime.Parse(employee!.HireDateString!).ToString("yyyy-MM-dd");
             return View(employee);
         }
+
+        [Authorize(Roles = "1")]
         [HttpPost]
         public IActionResult Edit(EmpRes emp)
         {
@@ -121,6 +127,7 @@ namespace eStore.Controllers
             return RedirectToAction("Employees"); 
         }
 
+        [Authorize(Roles = "1")]
         public IActionResult Status(int id)
         {
             var conn = $"api/Employees/{id}";
