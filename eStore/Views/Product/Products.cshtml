@@ -1,0 +1,357 @@
+﻿@using BusinessObject.Models
+@using BusinessObject.Res
+@model IEnumerable<BusinessObject.Res.ProductRes>
+@{
+    var search = ViewData["search"] as string;
+    var categoryId = ViewBag.categoryId;
+    var pagination = ViewData["pagination"] as PaginationMetadata;
+    var currentPage = pagination!.CurrentPage;
+    List<CateSelectRes> categories = ViewBag.categories;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long</title>
+</head>
+
+<!-- css file -->
+<link rel="stylesheet" href="~/css/dashboard.css">
+
+<!-- font awesome icon -->
+<link rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">>
+
+<body>
+    <div class="dashboards">
+        <input type="checkbox" id="menu-toggle">
+        <div class="sidebar">
+            <div class="side-header">
+                <h3> <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo"></h3>
+            </div>
+
+            <div class="side-content">
+                <div class="profile">
+                    <h4>WELCOME</h4>
+                    <small>David</small>
+                </div>
+
+                <div class="side-menu">
+                    <ul>
+                        <li>
+                            <a href="" class="active">
+                                <span class="las la-home"></span>
+                                <small>Dashboard</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-shopping-bag"></span>
+                                <small>Order</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-phone"></span>
+                                <small>Products</small>
+                            </a>
+                        </li>
+
+                        <!-- <li>
+                            <a href="">
+                                <span class="las la-shopping-cart"></span>
+                                <small>Orders</small>
+                            </a>
+                        </li> -->
+                        <li>
+                            <a href="">
+                                <span class="las la-user"></span>
+                                <small>Customer</small>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+
+            <header>
+                <div class="header-content">
+                    <label for="menu-toggle">
+                        <span class="las la-bars"></span>
+                    </label>
+
+                    <div class="header-menu">
+                        <div class="user">
+                            <div class="bg-img" style="background-image: url(~/images/1.jpeg)"></div>
+
+                            <span class="las la-power-off"></span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+
+            <main>
+
+                <div class="page-header">
+                    <h1>Order</h1>
+                </div>
+
+                <div class="page-content">
+
+                    <div class="analytics">
+
+                        <div class="card">
+                            <div class="card-head">
+                                <h2>107,200</h2>
+                                <span class="las la-user-friends"></span>
+                            </div>
+                            <div class="card-progress">
+                                <small>User activity this month</small>
+                                <div class="card-indicator">
+                                    <div class="indicator one" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-head">
+                                <h2>340,230</h2>
+                                <span class="las la-eye"></span>
+                            </div>
+                            <div class="card-progress">
+                                <small>Page views</small>
+                                <div class="card-indicator">
+                                    <div class="indicator two" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-head">
+                                <h2>$653,200</h2>
+                                <span class="las la-shopping-cart"></span>
+                            </div>
+                            <div class="card-progress">
+                                <small>Monthly revenue growth</small>
+                                <div class="card-indicator">
+                                    <div class="indicator three" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-head">
+                                <h2>47,500</h2>
+                                <span class="las la-envelope"></span>
+                            </div>
+                            <div class="card-progress">
+                                <small>New E-mails received</small>
+                                <div class="card-indicator">
+                                    <div class="indicator four" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="records table-responsive">
+                         
+                        <div class="record-header">
+                            <div class="add" style="float: right;">
+                                <button>Add record</button>
+                            </div>
+                            <div class="browse">
+                                <form asp-action="products" defaultbutton="SubmitButton">
+                                    @if (search is not null)
+                                    {
+                                        @if (categoryId is not null)
+                                        {
+                                            <input type="hidden" name="categoryId" value="@categoryId">
+                                        }
+                                        <input type="search" placeholder="Search" name="search" value="@search" class="record-search">
+                                    }
+                                    else
+                                    {
+                                        @if (categoryId is not null)
+                                        {
+                                            <input type="hidden" name="categoryId" value="@categoryId">
+                                        }
+
+                                        <input type="search" placeholder="Search" name="search" class="record-search">
+                                    }
+                                </form>
+                                <form asp-action="products">
+                                    <input type="hidden" name="search" value="@search" />
+                                    <select name="categoryId" id="" onchange="this.form.submit()">
+                                        <option value="">Remove selection</option>
+
+                                        @foreach (var i in categories)
+                                        {
+                                            @if (categoryId is null)
+                                            {
+                                                <option value="@i.CategoryId">@i.CategoryName</option>
+                                            }
+                                            else
+                                            {
+                                                @if (categoryId == i.CategoryId)
+                                                {
+                                                    <option value="@i.CategoryId" selected>@i.CategoryName</option>
+                                                }
+
+                                            }
+                                        }
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div>
+                            <table width="100%">
+                                <thead>
+
+                                    <tr>
+
+                                        <th><span class="las la-sort"></span> ProductID</th>
+                                        <th><span class="las la-sort"></span> Image</th>
+                                        <th><span class="las la-sort"></span> ProductName</th>
+                                        <th><span class="las la-sort"></span> UnitPrice</th>
+                                        <th><span class="las la-sort"></span> QuantityPerUnit</th>
+                                        <th><span class="las la-sort"></span> UnitsInStock</th>
+                                        <th><span class="las la-sort"></span> Category</th>
+                                        <th><span class="las la-sort"></span> UnitsOnOrder</th>
+                                        <th><span class="las la-sort"></span> ReorderLevel</th>
+                                        <th><span class="las la-sort"></span> Discontinued</th>
+                                        <th><span class="las la-sort"></span> Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                               @* @ViewData["deleteProduct"]*@
+                                    @foreach (var product in Model)
+                                    {
+                                        <tr>
+                                            <td>#@product.ProductId</td>
+                                            <td>
+                                                <div class="client">
+                                                    <div class="client-img bg-img"
+                                                     style="background-image: url(~/images/3.jpeg)">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @product.ProductName
+                                            </td>
+                                            <td>
+                                                @product.UnitPrice
+                                            </td>
+                                            <td>
+                                                @product.QuantityPerUnit
+                                            </td>
+                                            <td>
+                                                @product.UnitsInStock
+                                            </td>
+                                            <td>
+                                                @product.CategoryName
+                                            </td>
+                                            <td>
+                                                @product.UnitsOnOrder
+                                            </td>
+                                            <td>
+                                                @product.ReorderLevel
+                                            </td>
+                                            <td>
+                                                @product.Discontinued
+                                            </td>
+                                            <td>
+                                                <div class="actions">
+                                                 <a href="/Product/delete/@product.ProductId"> <span class="las la-eye"></span></a>
+
+                                                    <a href="/Product/edit/@product.ProductId"> Edit</a>
+                                        
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="paging">
+                            <div class="pagination">
+                                @{
+                                    int start = currentPage - 3;
+                                    int end = currentPage + 3;
+                                    if (end > pagination.TotalPages)
+                                    {
+                                        start -= (end - pagination.TotalPages);
+                                    }
+                                    if (start <= 0)
+                                    {
+                                        end += ((start - 1) * (-1));
+                                        start = 1;
+                                    }
+                                    end = end > pagination.TotalPages ? pagination.TotalPages : end;
+                                }
+                                @if (currentPage == 1)
+                                {
+                                    <a href="#" class="disabled">&laquo;</a>
+                                }
+                                else
+                                {
+                                    var pageHref = $"https://localhost:7290/Product/Products?page={currentPage - 1}&itemsperpage=10";
+                                    if (search is not null) pageHref = $"{pageHref}&search={search}";
+                                    if (categoryId is not null) pageHref = $"{pageHref}&categoryId={categoryId}";
+                                    <a href=@pageHref>&laquo;</a>
+                                }
+                                @for (int i = start; i <= end; i++)
+                                {
+                                    if (i == currentPage)
+                                    {
+                                        var pageHref = $"https://localhost:7290/Product/Products?page={i}&itemsperpage=10";
+                                        if (search is not null) pageHref = $"{pageHref}&search={search}";
+                                        if (categoryId is not null) pageHref = $"{pageHref}&dep={categoryId}";
+
+                                        <a href=@pageHref class="active">@i</a>
+                                    }
+                                    else
+                                    {
+                                        var pageHref = $"https://localhost:7290/Product/Products?page={i}&itemsperpage=10";
+                                        if (search is not null) pageHref = $"{pageHref}&search={search}";
+                                        if (categoryId is not null) pageHref = $"{pageHref}&categoryId={categoryId}";
+
+                                        <a href=@pageHref>@i</a>
+                                    }
+                                }
+                                @if (currentPage == pagination.TotalPages)
+                                {
+                                    <a href="#" class="disabled">&raquo;</a>
+                                }
+                                else
+                                {
+                                    var pageHref = $"https://localhost:7290/Product/Products?page={currentPage + 1}&itemsperpage=10";
+                                    if (search is not null) pageHref = $"{pageHref}&search={search}";
+                                    if (categoryId is not null) pageHref = $"{pageHref}&categoryId={categoryId}";
+                                    <a href=@pageHref>&raquo;</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+</body>
+
+</html>

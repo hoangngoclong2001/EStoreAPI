@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long</title>
+</head>
+
+<!-- css file -->
+<link rel="stylesheet" href="~/css/site.css">
+
+<!-- font awesome icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+    <nav>
+        <div class="nav-responsive">
+            <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo">
+            <div class="access">
+                <a href="#" id="notification"><i class="fa fa-bell"></i></a>
+                <a href="#" id="cart"><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" id="bars"><i class="fa fa-bars"></i></a>
+                <a href="#" id="account"><i class="fa fa-user-circle-o"></i></a>
+            </div>
+        </div>
+    </nav>
+    <main id="main">
+        <section>
+    <div class="wrapper">
+        <div class="left">
+            <img src="https://i.imgur.com/cMy8V5j.png" alt="user" width="100">
+            <h4>Alex William</h4>
+            <p>UI Developer</p>
+        </div>
+        <div class="right">
+            <div class="info">
+                <h3>Information</h3>
+                <div class="info_data">
+                    <div class="data">
+                        <h4>Email</h4>
+                        <p>alex@gmail.com</p>
+                    </div>
+                    <div class="data">
+                        <h4>Phone</h4>
+                        <p>0001-213-998761</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="projects">
+                <h3>Projects</h3>
+                <div class="projects_data">
+                    <div class="data">
+                        <h4>Recent</h4>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div class="data">
+                        <h4>Most Viewed</h4>
+                        <p>dolor sit amet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+         
+    </div>
+        <footer>
+            <p id="footer-title">
+                our support team</h3p>
+                <div class="footer">
+                    <div class="support">
+                        <ul>
+                            <h3>Know About Us</h3>
+                            <li><a href="#" id="about">Know Us</a></li>
+                            <li><a href="#" id="Refund-policy">Refund Policy</a></li>
+                            <li><a href="#" id="policy">Our Policy</a></li>
+                            <li><a href="#" id="return-product">How to Return ?</a></li>
+                            <li><a href="#" id="terms">Term & Conditios</a></li>
+                            <li><a href="#" id="privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="social-media">
+
+                        <ul>
+                            <h3>Contact Us</h3>
+                            <li><i class="fa fa-facebook"></i><a href="#" id="facebook">Facebook</a></li>
+                            <li><i class="fa fa-twitter"></i><a href="#" id="twitter">Twitter</a></li>
+                            <li><i class="fa fa-instagram"></i><a href="#" id="facebook">Instagram</a></li>
+                            <li><i class="fa fa-telegram"></i><a href="#" id="facebook">Telegram</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="address">
+                        <h3>Office Address</h3>
+                        <p>Building Ashiana,Cubbon Park,</p>
+                        <p>Bengaluru,560103,</p>
+                        <p>Karnatka,India</p>
+                        <p>Phone No : 9876543210</p>
+                    </div>
+                </div>
+
+                <div id="copyright">
+                    <p>&#169 : 2020 SampleKart.com. All Rights Reserved</p>
+                </div>
+        </footer>
+  </section>
+    </main>
+</body>
+
+</html>
+<style>
+    import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        list-style: none;
+        font-family: 'Josefin Sans', sans-serif;
+    }
+
+    body {
+        background-color: #f3f3f3;
+    }
+
+    .wrapper {
+        width: 100%;
+        display: flex;
+        box-shadow: 0 1px 20px 0 rgba(69, 90, 100, .08);
+        height: 80%;
+    }
+
+    .wrapper .left {
+        width: 35%;
+        background: linear-gradient(to right, #01a9ac, #01dbdf);
+        padding: 30px 25px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .wrapper .left img {
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .wrapper .left h4 {
+        margin-bottom: 10px;
+    }
+
+    .wrapper .left p {
+        font-size: 12px;
+    }
+
+    .wrapper .right {
+        width: 65%;
+        background: #fff;
+        padding: 30px 25px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .wrapper .right .info,
+    .wrapper .right .projects {
+        margin-bottom: 25px;
+    }
+
+    .wrapper .right .info h3,
+    .wrapper .right .projects h3 {
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #e0e0e0;
+        color: #353c4e;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+    }
+
+    .wrapper .right .info_data,
+    .wrapper .right .projects_data {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .wrapper .right .info_data .data,
+    .wrapper .right .projects_data .data {
+        width: 45%;
+    }
+
+    .wrapper .right .info_data .data h4,
+    .wrapper .right .projects_data .data h4 {
+        color: #353c4e;
+        margin-bottom: 5px;
+    }
+
+    .wrapper .right .info_data .data p,
+    .wrapper .right .projects_data .data p {
+        font-size: 13px;
+        margin-bottom: 10px;
+        color: #919aa3;
+    }
+
+    .wrapper .social_media ul {
+        display: flex;
+    }
+
+    .wrapper .social_media ul li {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(to right, #01a9ac, #01dbdf);
+        margin-right: 10px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 45px;
+    }
+
+    .wrapper .social_media ul li a {
+        color: #fff;
+        display: block;
+        font-size: 18px;
+    }
+</style>

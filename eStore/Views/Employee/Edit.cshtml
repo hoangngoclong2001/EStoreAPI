@@ -1,0 +1,130 @@
+﻿@model BusinessObject.Res.EmpRes
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long</title>
+</head>
+
+<!-- css file -->
+<link rel="stylesheet" href="~/css/dashboard.css">
+
+<!-- font awesome icon -->
+<link rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">>
+
+<body>
+    <div class="dashboards">
+        <input type="checkbox" id="menu-toggle">
+        <div class="sidebar">
+            <div class="side-header">
+                <h3> <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo"></h3>
+            </div>
+            <div class="side-content">
+                <div class="profile">
+                    <h4>WELCOME</h4>
+                    <small>David</small>
+                </div>
+                <div class="side-menu">
+                    <ul>
+                        <li>
+                            <a href="" class="active">
+                                <span class="las la-home"></span>
+                                <small>Dashboard</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-shopping-bag"></span>
+                                <small>Order</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-phone"></span>
+                                <small>Products</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://localhost:7290/Employee/Employees">
+                                <span class="las la-user"></span>
+                                <small>Employees</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://localhost:7290/Customer/Customers">
+                                <span class="las la-user"></span>
+                                <small>Customers</small>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <header>
+                <div class="header-content">
+                    <label for="menu-toggle">
+                        <span class="las la-bars"></span>
+                    </label>
+                    <div class="header-menu">
+                        <div class="user">
+                            <div class="bg-img" style="background-image: url(~/images/1.jpeg)"></div>
+                            <span class="las la-power-off"></span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="page-header">
+                    <h1>Edit</h1>
+                </div>
+                <div class="containerproduct">
+                    @using (Html.BeginForm("Edit", "Employee", FormMethod.Post))
+                    {
+                        <input type="hidden" asp-for="@Model.EmployeeId" required>
+                        <label for="ProductName"><b>LAST NAME(*)</b></label>
+                        <input type="text" placeholder="LAST NAME" asp-for="@Model.LastName" required>
+                        <br>
+                        <label for="Unit"><b>FIRST NAME(*)</b></label>
+                        <input type="text" placeholder="FIRST NAME" asp-for="@Model.FirstName" required>
+                        <br>
+                        <label for="Category"><b>DEPARTMENT(*)</b></label>
+                        <br>
+                        <select asp-for="@Model.DepartmentId" asp-items="@(new SelectList(ViewBag.departments, "DepartmentId", "DepartmentName"))" class="select-field"></select>
+                        <br>
+                        <label for="Unit"><b>TITLE(*)</b></label>
+                        <input type="text" placeholder="TITlE" asp-for="@Model.Title" required>
+                        <br>
+                        <label for="Quality"><b>TITLE OF COURTESY(*)</b></label>
+                        <input type="text" placeholder="TITLE OF COURTESY" asp-for="@Model.TitleOfCourtesy" required>
+                        <br>
+                        <label for="Quality"><b>ADDRESS(*)</b></label>
+                        <input type="text" placeholder="ADDRESS" asp-for="@Model.Address" required>
+                        <br>
+                        <label for="Reorderlevel"><b>BIRTH DATE(*)</b></label>
+                        <br>
+                        <input type="date" placeholder="BIRTH DATE" asp-for="@Model.BirthDate" value="@ViewData["BirthDate"]" required>
+                        <br>
+                        <label for="UnitsInStock"><b>HIRE DATE(*)</b></label>
+                        <br>
+                        <input type="date" placeholder="HIRE DATE" asp-for="@Model.HireDate" value="@ViewData["HireDate"]" required>
+                        <br>
+                        <label for="UnitsInStock"><b>EMAIL(*)</b></label>
+                        <input type="text" placeholder="EMAIL" asp-for="@Model.Email" required>
+                        <br>
+                        <label for="UnitsInStock"><b>PASSWORD(*)</b></label>
+                        <input type="text" placeholder="Enter password" asp-for="@Model.Password">
+                        <br>
+                        <button type="submit">Submit</button>
+                    }
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

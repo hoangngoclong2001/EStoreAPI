@@ -1,0 +1,260 @@
+﻿@using BusinessObject.Models
+@using BusinessObject.Res
+@model IEnumerable<BusinessObject.Res.ProductRes>
+@{
+
+    var categoryId = ViewBag.categoryId;
+    List<CateSelectRes> categories = ViewBag.categories;
+
+
+    ProductRes products = ViewBag.products;
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long</title>
+</head>
+
+<!-- css file -->
+<link rel="stylesheet" href="~/css/site.css">
+
+<!-- font awesome icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+    <nav>
+        <div class="nav-responsive">
+            <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo">
+
+            <div class="access">
+                <a href="#" id="notification"><i class="fa fa-bell"></i></a>
+                <a href="#" id="cart"><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" id="bars"><i class="fa fa-bars"></i></a>
+                <a href="#" id="account"><i class="fa fa-user-circle-o"></i></a>
+            </div>
+        </div>
+    </nav>
+
+
+    <main id="main">
+
+        <div id="content">
+            <div id="content-detail">
+                <div id="content-title">
+                    <a href="index.html">Home</a> >
+                    <a href="category1.html">Category 1</a> >
+                    Model: SP1
+                </div>
+                <div id="product">
+                    <div id="product-name">
+                        <h2>@products.ProductName</h2>
+                        <div id="product-detail">
+                            <div id="product-detail-left">
+                                <div id="product-img">
+                                    <img src="~/images/redmi note 8C.jpg" />
+                                </div>
+                                <div id="product-img-items">
+                                    <div><a href="#"><img src="~/images/redmi note 8C.jpg" /></a></div>
+                                    <div><a href="#"><img src="~/images/redmi note 8C.jpg" /></a></div>
+                                    <div><a href="#"><img src="~/images/redmi note 8C.jpg" /></a></div>
+                                    <div><a href="#"><img src="~/images/redmi note 8C.jpg" /></a></div>
+                                </div>
+                            </div>
+                            <div id="product-detail-right">
+                                <div id="product-detail-right-content">
+                                    <div id="product-price">@products.UnitPrice</div>
+                                    <div id="product-status">@products.UnitsInStock</div>
+                                    <div id="product-detail-buttons">
+                                        <div id="product-detail-button">
+                                            <input type="button" value="BY NOW">
+                                            <input type="button" value="ADD TO CART" style="background-color: #fff; color:red;border: 1px solid gray;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="info-detail">
+                    <div id="info-detail-title">
+                        <h2>Information deltail</h2>
+                        <div style="margin:10px auto;">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, debitis. Asperiores soluta eveniet eos accusantium doloremque cum suscipit ducimus enim at sapiente mollitia consequuntur dicta quaerat, sunt voluptates autem. Quam!
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem illum autem veritatis maxime corporis quod quibusdam nostrum eaque laborum numquam quos unde eveniet aut, exercitationem voluptatum veniam fugiat, debitis esse?
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio eligendi ratione vitae nobis numquam dolorum assumenda saepe enim cumque blanditiis, deleniti neque voluptate vel ducimus in omnis harum aut nisi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- end of footer section -->
+
+    </main>
+    <!-- Footer section -->
+    <footer>
+        <p id="footer-title">
+            our support team</h3p>
+            <div class="footer">
+                <div class="support">
+                    <ul>
+                        <h3>Know About Us</h3>
+                        <li><a href="#" id="about">Know Us</a></li>
+                        <li><a href="#" id="Refund-policy">Refund Policy</a></li>
+                        <li><a href="#" id="policy">Our Policy</a></li>
+                        <li><a href="#" id="return-product">How to Return ?</a></li>
+                        <li><a href="#" id="terms">Term & Conditios</a></li>
+                        <li><a href="#" id="privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="social-media">
+
+                    <ul>
+                        <h3>Contact Us</h3>
+                        <li><i class="fa fa-facebook"></i><a href="#" id="facebook">Facebook</a></li>
+                        <li><i class="fa fa-twitter"></i><a href="#" id="twitter">Twitter</a></li>
+                        <li><i class="fa fa-instagram"></i><a href="#" id="facebook">Instagram</a></li>
+                        <li><i class="fa fa-telegram"></i><a href="#" id="facebook">Telegram</a></li>
+                    </ul>
+                </div>
+
+                <div class="address">
+                    <h3>Office Address</h3>
+                    <p>Building Ashiana,Cubbon Park,</p>
+                    <p>Bengaluru,560103,</p>
+                    <p>Karnatka,India</p>
+                    <p>Phone No : 9876543210</p>
+                </div>
+            </div>
+
+            <div id="copyright">
+                <p>&#169 : 2020 SampleKart.com. All Rights Reserved</p>
+            </div>
+    </footer>
+    <!-- end of main -->
+    <!-- cart list section -->
+
+
+</body>
+<style>
+
+    #content-detail {
+        width: 100%;
+    }
+
+    #content-title {
+        line-height: 15px;
+        margin-bottom: 8px;
+        padding: 15px;
+    }
+
+    #product {
+        background-color: #fff;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #product-name {
+        padding: 15px;
+    }
+
+        #product-name h2 {
+            line-height: 15px;
+            border-bottom: 1px solid gainsboro;
+            width: 100%;
+            font-size: 30px;
+            padding-bottom: 15px;
+        }
+
+    #product-detail {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    #product-detail-left {
+        width: 40%;
+    }
+
+    #product-img img {
+        width: 80%;
+    }
+
+    #product-img-items {
+        text-align: center;
+        margin-top: 20px;
+        display: inline-flex;
+        width: 80%;
+    }
+
+        #product-img-items div {
+            border: 1px solid gainsboro;
+            width: 20%;
+            margin: 5px;
+            border-radius: 5px;
+            padding: 3px 0px;
+        }
+
+            #product-img-items div:hover {
+                border: 1px solid red;
+            }
+
+        #product-img-items img {
+            width: 80%;
+        }
+
+    #product-detail-right {
+        width: 60%;
+    }
+
+    #product-detail-right-content {
+        width: 100%;
+    }
+
+    #product-price {
+        color: red;
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    #product-status {
+        color: green;
+        font-weight: bold;
+    }
+
+    #product-detail-right-button {
+        margin-top: 30px;
+    }
+
+    #product-detail-buttons {
+        margin-top: 20px;
+        display: flex;
+    }
+
+    #product-detail-button {
+        width: 100%;
+    }
+
+        #product-detail-button input[type="button"] {
+            width: 49%;
+            font-weight: bold;
+            padding: 12px;
+        }
+
+            #product-detail-button input[type="button"]:hover {
+                box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+                -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.75);
+            }
+</style>
+</html>
