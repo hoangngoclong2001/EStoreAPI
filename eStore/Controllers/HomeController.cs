@@ -65,10 +65,7 @@ public class HomeController : Controller
         ViewBag.productSales = productSales;
         return View(products);
     }
-    public IActionResult Login()
-    {
-        return View();
-    }
+
     [HttpGet]
     public IActionResult Profile()
     {

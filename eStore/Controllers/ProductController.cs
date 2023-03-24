@@ -5,6 +5,7 @@ using eStore.Config;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Drawing;
 
 namespace eStore.Controllers
 {
@@ -48,8 +49,8 @@ namespace eStore.Controllers
             return Redirect("/Product/Products");
         }
 
-     
-        public IActionResult  EditProduct(int id)
+
+        public IActionResult EditProduct(int id)
         {
             var conn = $"api/products/{id}";
 
@@ -63,8 +64,10 @@ namespace eStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditProduct(ProductReq pmp)
+        public IActionResult EditProduct(ProductReq pmp, [FromForm] IFormFile fileImage)
         {
+            var bytes = new byte[fileImage.OpenReadStream().Length + 1];
+            fileImage.OpenReadStream().Read(bytes, 0, bytes.Length);
             ProductReq req = new ProductReq
             {
                 ProductId = pmp.ProductId,
@@ -76,6 +79,7 @@ namespace eStore.Controllers
                 UnitsInStock = pmp.UnitsInStock,
                 Discontinued = pmp.Discontinued,
                 CategoryId = pmp.CategoryId,
+                Picture = bytes
             };
 
             var _conn = $"api/products/{req.ProductId}";
@@ -96,8 +100,11 @@ namespace eStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct(ProductReq pmp)
+        public IActionResult AddProduct(ProductReq pmp, [FromForm] IFormFile fileImage)
         {
+
+            var bytes = new byte[fileImage.OpenReadStream().Length + 1];
+            fileImage.OpenReadStream().Read(bytes, 0, bytes.Length);
             ProductReq req = new ProductReq
             {
                 ProductName = pmp.ProductName,
@@ -108,6 +115,7 @@ namespace eStore.Controllers
                 UnitsInStock = pmp.UnitsInStock,
                 Discontinued = pmp.Discontinued,
                 CategoryId = pmp.CategoryId,
+                Picture = bytes
             };
 
             var _conn = $"api/products";

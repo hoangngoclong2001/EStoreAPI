@@ -121,7 +121,7 @@
 
                         <h3 id="item-price"> <span class="shop-item-price">@p.UnitPrice $</span></h3>
                         <form asp-action="cart" method="post" style="width: 100%">
-                            <input type="hidden" name="name" value="@product.ProductName" />
+                            <input type="hidden" name="name" value="@p.ProductName" />
                             <input type="submit" name="action" value="BUY NOW" style="width: 100%; background-color: #fff; color:red;border: 1px solid gray;">
                         </form>
                     </div>

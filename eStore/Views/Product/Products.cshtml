@@ -241,9 +241,18 @@
                                         <tr>
                                             <td>#@product.ProductId</td>
                                             <td>
+                                                @{
+                                                    string imgDataURL = "";
+                                                    if (product.Picture is not null)
+                                                    {
+                                                        string imgBase64 = Convert.ToBase64String(product.Picture);
+                                                        imgDataURL = string.Format("data:image;base64,{0}", imgBase64);
+                                                    }
+                                                }
+
                                                 <div class="client">
                                                     <div class="client-img bg-img"
-                                                     style="background-image: url(~/images/3.jpeg)">
+                                                     style="background-image: url(@imgDataURL)">                                                        
                                                     </div>
                                                 </div>
                                             </td>
