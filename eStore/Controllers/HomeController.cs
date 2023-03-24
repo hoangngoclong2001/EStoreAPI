@@ -65,9 +65,21 @@ public class HomeController : Controller
     {
         return View();
     }
+    [HttpGet]
     public IActionResult Profile()
     {
-        return View();
+        var identity = (ClaimsIdentity)User.Identity;
+        var claims = identity.Claims.ToList();
+        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+        email= email ?? string.Empty;   
+        var conn = $"api/Accounts/getEmail/{email}";
+        var Res = ResponseConfig.GetData(conn).Result;
+        var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
+        var conn1 = $"api/Customers/{account.CustomerId}";
+        var Res2 = ResponseConfig.GetData(conn1).Result;
+        var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
+        ViewBag.Customer = cus;
+        return View(account);
     }
     public IActionResult Forgot()
     {
@@ -77,6 +89,7 @@ public class HomeController : Controller
     {
         return View();
     }
+
     public IActionResult Cart()
     {
         return View();

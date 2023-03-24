@@ -25,7 +25,7 @@
 
 <!-- css file -->
 <link rel="stylesheet" href="~/css/site.css">
-
+<script src="~/js/store.js" async></script>
 <!-- font awesome icon -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -61,8 +61,28 @@
             </div>
         </div>
     </nav>
+   @* <div id="cart-container">
+        <p id="cart-title">Your <strong>Cart</strong></p id="cart-title">
+        <div id="empty-cart">
+            <h1>Your Cart is Empty...</h1>
+        </div>
 
-    <!-- main section -->
+        <h2 class="section-header">CART</h2>
+             <div class="cart-row">
+                <span class="cart-item cart-header cart-column">ITEM</span>
+                <span class="cart-price cart-header cart-column">PRICE</span>
+                <span class="cart-quantity cart-header cart-column">QUANTITY</span>
+            </div>
+        <div class="cart-items">
+        </div>
+        <div class="cart-total">
+            <strong class="cart-total-title">Total</strong>
+            <span class="cart-total-price">$0</span>
+        </div>
+        <button class="btn btn-primary btn-purchase" type="button">PURCHASE</button>
+
+    </div>
+    <!-- main section -->*@
     <main id="main">
         <!-- categories section -->
         <form asp-action="Index" defaultbutton="SubmitButton">
@@ -92,14 +112,18 @@
                 {
                     <div class="item-container">
                         <div class="card-item">
-                            <img src="~/images/oppofindX2.jpg" alt="img" id="card-img">
+                            <img src="~/images/oppofindX2.jpg" alt="img"  class="shop-item-image" id="card-img">
                             <p>
-                                <a id="item-name" href="/Product/detail/@p.ProductId">@p.ProductName </a>
+                                <a id="item-name" href="/Product/detail/@p.ProductId"> <span class="shop-item-title">@p.ProductName</span> </a>
                             </p>
                         </div>
-                        <i class="fa fa-shopping-cart" id="add-to-cart"></i>
-                        <h3 id="item-price">Price : $ @p.UnitPrice</h3>
+                          
 
+                        <h3 id="item-price"> <span class="shop-item-price">@p.UnitPrice $</span></h3>
+                        <form asp-action="cart" method="post" style="width: 100%">
+                            <input type="hidden" name="name" value="@product.ProductName" />
+                            <input type="submit" name="action" value="BUY NOW" style="width: 100%; background-color: #fff; color:red;border: 1px solid gray;">
+                        </form>
                     </div>
 
                 }
@@ -107,7 +131,6 @@
 
             </div>
         </section>
-
         <!-- Redmi phones -->
         <section class="categories">
             <div class="title-container">
@@ -124,8 +147,12 @@
                                 <a id="item-name" href="/Product/detail/@s.ProductId">@s.ProductName </a>
                             </p>
                         </div>
-                        <i class="fa fa-shopping-cart" id="add-to-cart"></i>
                         <h3 id="item-price">Price : $ @s.UnitPrice</h3>
+                        <form asp-action="cart" method="post" style="width: 100%">
+                            <input type="hidden" name="name" value="@s.ProductName" />
+                            <input type="submit" name="action" value="BUY NOW" style="width: 100%; background-color: #fff; color:red;border: 1px solid gray;">
+                        </form>
+                       
 
                     </div>
 
@@ -145,7 +172,7 @@
                 <h1 id="title">All Products</h1>
                 <form asp-action="Index">
                     <select name="categoryId" id="Move" onchange="this.form.submit()" style="font-size: 20px;margin-left: 80px;">
-                        <option value="">Remove selection</option>
+                        <option value="">Chosse options</option>
 
                         @foreach (var i in categories)
                         {
@@ -166,6 +193,9 @@
 
                 </form>
             </div>
+
+
+
             <div class="card">
                 @foreach (var product in Model)
                 {
@@ -177,7 +207,10 @@
                                 <a id="item-name" href="/Product/detail/@product.ProductId">@product.ProductName</a>
                             </p>
                         </div>
-                        <i class="fa fa-shopping-cart" id="add-to-cart"></i>
+                        <form asp-action="cart" method="post" style="width: 100%">
+                            <input type="hidden" name="name" value="@product.ProductName" />
+                            <input type="submit" name="action" value="BUY NOW" style="width: 100%; background-color: #fff; color:red;border: 1px solid gray;">
+                        </form>
                         <h3 id="item-price">Price : $ @product.UnitPrice</h3>
                     </div>
 

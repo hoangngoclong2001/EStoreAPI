@@ -14,5 +14,6 @@ namespace BusinessObject.Res
         public string? CustomerId { get; set; }
         public int? EmployeeId { get; set; }
         public int? Role { get; set; }
+
     }
 }

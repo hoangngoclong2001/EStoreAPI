@@ -1,12 +1,5 @@
-﻿@using BusinessObject.Models
-@using BusinessObject.Res
-@using System.Collections
+﻿
 @model BusinessObject.Res.ProductRes
-@{
-    List<CateSelectRes> categories = ViewBag.categories;
-    var categoryId = ViewBag.categoryId;
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,52 +76,40 @@
             </header>
             <main>
                 <div class="page-header">
-                    <h1>Edit product</h1>
+                    <h1>Add product</h1>
                 </div>
                 <div class="containerproduct">
-                    <form asp-action="productedit" method="post" enctype="multipart/form-data">
+                    <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="@Model.ProductId" required>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <label for="ProductName"><b>ProductName(*)</b></label>
-                        <input asp-for="ProductName" type="text" placeholder="ProductName" name="ProductName" required>
+                        <input asp-for="ProductName" type="text" placeholder="ProductName" required>
                         <br>
                         <label for="Unit"><b>UnitInPrice($)</b></label>
-                        <input asp-for="UnitPrice" type="text" placeholder="Enter UnitInPrice" name="psw" required>
+                        <input asp-for="UnitPrice" type="text" placeholder="Enter UnitInPrice" required>
                         <br>
-                        <label for="Unit"><b>Quantity per unit:</b></label>
-                        <input asp-for="QuantityPerUnit" type="text" placeholder="Enter UnitInPrice" name="psw" required>
+                        <label for="Unit"><b>UnitOnOrder($)</b></label>
+                        <input asp-for="UnitsOnOrder" type="text" placeholder="Enter UnitInPrice" required>
                         <br>
-                        <label for="Quality"><b>Units in stock (*):</b></label>
-                        <input asp-for="UnitsInStock" type="text" placeholder="Enter Quality" name="psw" required>
+                        <label for="Quality"><b>Quality per unit($)</b></label>
+                        <input asp-for="QuantityPerUnit" type="text" placeholder="Enter Quality" required>
                         <br>
                         <label for="Reorderlevel"><b>Reorderlevel(*)</b></label>
-                        <input asp-for="ReorderLevel" type="text" placeholder="Enter level" name="psw" required>
+                        <input asp-for="ReorderLevel" type="text" placeholder="Enter level" required>
                         <br>
-                        <label for="UnitsInStock"><b>Units on order:(*)</b></label>
-                        <input asp-for="UnitsOnOrder" type="text" placeholder="Enter stock" name="psw" required>
+                        <label for="UnitsInStock"><b>UnitsInStock(*)</b></label>
+                        <input asp-for="UnitsInStock" type="text" placeholder="Enter stock" required>
                         <br>
                         <label for="Discontinued"><b>Discontinued(*)</b></label>
-                        <input type="checkbox" required>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="Discontinued" /> @Html.DisplayNameFor(model => model.Discontinued)
+                            </label>
+                        </div>
                         <br>
                         <label for="Category"><b>Category(*)</b></label>
                         <br>
-                        <  <select name="categoryId" id="">
-                            <option value="">Remove selection</option>
-
-                            @foreach (var i in categories)
-                            {
-                                @if (categoryId is null)
-                                {
-                                    <option value="@i.CategoryId">@i.CategoryName</option>
-                                }
-                                else
-                                {
-                                    @if (categoryId == i.CategoryId && i.CategoryId)
-                                    {
-                                        <option value="@i.CategoryId" selected>@i.CategoryName</option>
-                                    }
-
-                                }
-                            }
-                        </select>
+                        <select asp-for="@Model.CategoryId" asp-items="@(new SelectList(ViewBag.categories, "CategoryId", "CategoryName"))" class="select-field"></select>
                         <br>
                         <button type="submit">Submit</button>
                     </form>

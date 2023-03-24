@@ -16,10 +16,13 @@ namespace DataAccess
 
         Task<Account> Account(int? id);
 
+        Task<Account> AccountEmail(string? email);
+
         Task<Account> Account(AuthReq req);
 
         Task<string?> Account(string? email);
 
+       
         Task<bool> Save(SignUpReq req);
 
         Task<bool> Save(EmpSignUpReq req);

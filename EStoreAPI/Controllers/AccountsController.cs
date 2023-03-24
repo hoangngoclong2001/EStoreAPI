@@ -59,6 +59,15 @@ namespace EStoreAPI.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        [Route("getEmail/{email}")]
+        public async Task<IActionResult> getemail(string ? email)
+        {
+            if (email is null) return BadRequest();
+            var accounts = await repository.AccountEmail(email);
+            return accounts is null ? NotFound() : Ok(mapper.Map<AccRes>(accounts));
+        }
+        [AllowAnonymous]
         [HttpPost]
         [Route("reset")]
         public async Task<IActionResult> Get(string? email)

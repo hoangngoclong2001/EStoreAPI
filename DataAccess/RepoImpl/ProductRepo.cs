@@ -25,7 +25,7 @@ namespace DataAccess.RepoImpl
         public async Task<bool> Delete(Product product) => await ProductDAO.DeleteProduct(product);
 
         public List<Product> GetTopProductsSale() => ProductDAO.GetTopProductsSale();
-
+        
         public List<Product> GetTop4Newest() => ProductDAO.GetTop4Newest();
         public List<Product> GetProductByCategoryID(int categoryid) => ProductDAO.GetProductByCategoryID(categoryid);
     }

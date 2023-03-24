@@ -54,6 +54,7 @@ namespace DataAccess.DAO
             }
             return gettop4;
         }
+        
         public static List<Product> GetProductByCategoryID(int id)
         {
             var gettop4byCate = new List<Product>();

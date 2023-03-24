@@ -34,7 +34,15 @@ namespace DataAccess.DAO
             }
             return accounts;
         }
-
+        public static async Task<Account> AccountEmail(string ? email)
+        {
+            Account? account;
+            using (var context = new PRN231DBContext())
+            {
+                account = await context.Accounts.Include(x => x.Customer).SingleOrDefaultAsync(x => x.Email.Equals(email)); ;
+            }
+            return account ?? new();
+        }
         public static async Task<Account> GetAccount(int? id)
         {
             Account? account;

@@ -1,4 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@model BusinessObject.Models.Order
+@using BusinessObject.Models
+@using Newtonsoft.Json
+@using System.Security.Claims
+@{
+    ViewData["Title"] = "Cart";
+    decimal Total = 0;
+    List<Order> cart = new List<Order>();
+    if (!string.IsNullOrEmpty(Context.Session.GetString("cart")))
+    {
+        cart = JsonConvert.DeserializeObject<List<Order>>(Context.Session.GetString("cart"));
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,7 +23,7 @@
 
 <!-- css file -->
 <link rel="stylesheet" href="~/css/site.css">
-
+<script src="~/js/store.js" async></script>
 <!-- font awesome icon -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -37,8 +51,8 @@
     <main id="main">
 
         <h1>Your Cart is Empty...</h1>
-
-        <div id="cart-with-items">
+       
+      @*  <div id="cart-with-items">
             <div class="cart-column">
                 <h3>Product</h3>
                 <h3>Product Name</h3>
@@ -53,7 +67,7 @@
                 <h2 id="total-amount"></h2>
                 <h3 id="you-saved"></h3>
             </div>
-        </div>
+        </div>*@
         <!-- Footer section -->
         <footer>
             <p id="footer-title">

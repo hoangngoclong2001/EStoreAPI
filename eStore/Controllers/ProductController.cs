@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using BusinessObject.Req;
 using BusinessObject.Res;
 using eStore.Config;
 using Microsoft.AspNetCore.Mvc;
@@ -46,56 +47,75 @@ namespace eStore.Controllers
             ViewData["deleteProduct"] = "Can't delete because this product are in " + Res + " Order";
             return Redirect("/Product/Products");
         }
-        [HttpGet]
-        [Route("/product/create")]
+
+     
+        public IActionResult  EditProduct(int id)
+        {
+            var conn = $"api/products/{id}";
+
+            var _conn = $"api/Categories/selectlist";
+            var Res = ResponseConfig.GetData(conn).Result;
+            var _Res = ResponseConfig.GetData(_conn).Result;
+            var product = JsonConvert.DeserializeObject<ProductRes>(Res.Content.ReadAsStringAsync().Result);
+            List<CateSelectRes>? category = JsonConvert.DeserializeObject<List<CateSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
+            ViewBag.categories = category;
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult EditProduct(ProductReq pmp)
+        {
+            ProductReq req = new ProductReq
+            {
+                ProductId = pmp.ProductId,
+                ProductName = pmp.ProductName,
+                UnitPrice = pmp.UnitPrice,
+                UnitsOnOrder = pmp.UnitsOnOrder,
+                QuantityPerUnit = pmp.QuantityPerUnit,
+                ReorderLevel = pmp.ReorderLevel,
+                UnitsInStock = pmp.UnitsInStock,
+                Discontinued = pmp.Discontinued,
+                CategoryId = pmp.CategoryId,
+            };
+
+            var _conn = $"api/products/{req.ProductId}";
+            var Res = ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
+
+            return RedirectToAction("Products");
+        }
+
+
         public IActionResult AddProduct()
         {
+
             var _conn = $"api/Categories/selectlist";
             var _Res = ResponseConfig.GetData(_conn).Result;
             List<CateSelectRes>? category = JsonConvert.DeserializeObject<List<CateSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
             ViewBag.categories = category;
             return View();
         }
+
         [HttpPost]
-        [Route("/product/create")]
-        public IActionResult AddProduct(Product product)
+        public IActionResult AddProduct(ProductReq pmp)
         {
-            List<SelectListItem> categories = JsonConvert.DeserializeObject<List<SelectListItem>>(ResponseConfig.GetData("api/categories/selectlist").Result.Content.ReadAsStringAsync().Result);
-            ViewData["categories"] = categories;
-
-
-            if (!ModelState.IsValid)
+            ProductReq req = new ProductReq
             {
-                foreach (var error in ViewData.ModelState.Values.SelectMany(modelState => modelState.Errors))
-                {
-                    string err = error.ErrorMessage;
-                }
-            }
+                ProductName = pmp.ProductName,
+                UnitPrice = pmp.UnitPrice,
+                UnitsOnOrder = pmp.UnitsOnOrder,
+                QuantityPerUnit = pmp.QuantityPerUnit,
+                ReorderLevel = pmp.ReorderLevel,
+                UnitsInStock = pmp.UnitsInStock,
+                Discontinued = pmp.Discontinued,
+                CategoryId = pmp.CategoryId,
+            };
 
-            var Res = ResponseConfig.PostData("api/products/create", JsonConvert.SerializeObject(product));
+            var _conn = $"api/products";
+            var Res = ResponseConfig.PostData(_conn, JsonConvert.SerializeObject(req));
 
-            if (!Res.Result.IsSuccessStatusCode)
-                return StatusCode(StatusCodes.Status500InternalServerError);
-
-            return RedirectToAction("Product/Proudcts");
+            return RedirectToAction("Products");
         }
-        [HttpGet]
-        [Route("/product/edit/{id}")]
-        public IActionResult EditProduct(string id)
-        {
-            var conn = $"api/Products/{id}";
 
-            var _conn = $"api/Categories/selectlist";
-            var _Res = ResponseConfig.GetData(_conn).Result;
-            var Res = ResponseConfig.GetData(conn).Result;
-
-            ProductRes products = JsonConvert.DeserializeObject<ProductRes>(Res.Content.ReadAsStringAsync().Result);
-
-            List<CateSelectRes>? category = JsonConvert.DeserializeObject<List<CateSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
-            ViewBag.categories = category;
-
-            return View(products);
-        }
 
 
     }

@@ -4,10 +4,10 @@
 @model BusinessObject.Res.ProductRes
 @{
     ViewData["Title"] = "Create Product";
-    List<CateSelectRes> categories = ViewBag.categories;
-    var categoryId = ViewBag.categoryId;
+    var categories = ViewData["categories"] as Category;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,25 +87,25 @@
                     <h1>Add product</h1>
                 </div>
                 <div class="containerproduct">
-                    <form asp-action="productcreate" method="post" enctype="multipart/form-data">
+                    <form asp-action="AddProduct" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <label for="ProductName"><b>ProductName(*)</b></label>
-                        <input asp-for="ProductName" type="text" placeholder="ProductName" name="ProductName" required>
+                        <input asp-for="ProductName" type="text" placeholder="ProductName" required>
                         <br>
                         <label for="Unit"><b>UnitInPrice($)</b></label>
-                        <input asp-for="UnitPrice" type="text" placeholder="Enter UnitInPrice" name="psw" required>
+                        <input asp-for="UnitPrice" type="text" placeholder="Enter UnitInPrice" required>
                         <br>
                         <label for="Unit"><b>UnitOnOrder($)</b></label>
-                        <input asp-validation-for="UnitsOnOrder" type="text" placeholder="Enter UnitInPrice" name="psw" required>
+                        <input asp-for="UnitsOnOrder" type="text" placeholder="Enter UnitInPrice"  required>
                         <br>
                         <label for="Quality"><b>Quality per unit($)</b></label>
-                        <input asp-validation-for="QuantityPerUnit" type="text" placeholder="Enter Quality" name="psw" required>
+                        <input asp-for="QuantityPerUnit" type="text" placeholder="Enter Quality" required>
                         <br>
                         <label for="Reorderlevel"><b>Reorderlevel(*)</b></label>
-                        <input asp-for="ReorderLevel" type="text" placeholder="Enter level" name="psw" required>
+                        <input asp-for="ReorderLevel" type="text" placeholder="Enter level"  required>
                         <br>
                         <label for="UnitsInStock"><b>UnitsInStock(*)</b></label>
-                        <input asp-for="UnitsInStock" type="text" placeholder="Enter stock" name="psw" required>
+                        <input asp-for="UnitsInStock" type="text" placeholder="Enter stock"  required>
                         <br>
                         <label for="Discontinued"><b>Discontinued(*)</b></label>
                         <div class="form-group form-check">
@@ -116,25 +116,7 @@
                         <br>
                         <label for="Category"><b>Category(*)</b></label>
                         <br>
-                        <select name="categoryId" id="">
-                            <option value="">Choose</option>
-
-                            @foreach (var i in categories)
-                            {
-                                @if (categoryId is null)
-                                {
-                                    <option value="@i.CategoryId">@i.CategoryName</option>
-                                }
-                                else
-                                {
-                                    @if (categoryId == i.CategoryId)
-                                    {
-                                        <option value="@i.CategoryId" selected>@i.CategoryName</option>
-                                    }
-
-                                }
-                            }
-                        </select>
+                        <select asp-for="@Model.CategoryId" asp-items="@(new SelectList(ViewBag.categories, "CategoryId", "CategoryName"))" class="select-field"></select>
                         <br>
                         <button type="submit">Submit</button>
                     </form>

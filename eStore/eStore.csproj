@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Product\ProductDetail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BusinessObject\BusinessObject.csproj" />
     <ProjectReference Include="..\EStoreAPI\EStoreAPI.csproj" />
   </ItemGroup>

@@ -23,6 +23,8 @@ namespace DataAccess.RepoImpl
 
         public async Task<bool> Save(SignUpReq req) => await AccountDAO.SaveCustomer(req);
 
+        public async Task<Account> AccountEmail(string ? email) => await AccountDAO.AccountEmail(email);
+
         public async Task<bool> Save(EmpSignUpReq req) => await AccountDAO.SaveEmpAccount(req);
 
         public async Task<bool> Save(EmployeeAccount employee) => await AccountDAO.SaveEmployee(employee);
