@@ -11,11 +11,15 @@ using System.Security.Claims;
 using System.Text;
 using BusinessObject.Models;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eStore.Controllers;
 
 public class HomeController : Controller
+
 {
+    private static readonly string BaseUrl = "https://localhost:7177/";
+
     private readonly IConfiguration configuration;
     public HomeController(IConfiguration configuration)
     {
@@ -81,10 +85,6 @@ public class HomeController : Controller
         ViewBag.Customer = cus;
         return View(account);
     }
-    public IActionResult Forgot()
-    {
-        return View();
-    }
     public IActionResult Privacy()
     {
         return View();
@@ -99,6 +99,7 @@ public class HomeController : Controller
 
         return View();
     }
+
     [HttpGet]
     [Route("/product/detail/{id}")]
     public IActionResult Detail(string id)
@@ -117,11 +118,37 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet]
+    public IActionResult Login()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]) && !string.IsNullOrEmpty(HttpContext.Request.Cookies["refreshToken"]))
+        {
+            UserRes u = new UserRes();
+            u.RefreshToken = HttpContext.Request.Cookies["refreshToken"];
+            var conn = $"api/Accounts/signin";
+            var Res = PostData(conn, JsonConvert.SerializeObject(u));
+            if (!Res.Result.IsSuccessStatusCode)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            var user = JsonConvert.DeserializeObject<UserRes>(Res.Result.Content.ReadAsStringAsync().Result);
+
+            HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
+
+            ValidateToken(user!.AccessToken!.Replace("\"", ""));
+
+            Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
+
+            return Redirect("/");
+        }
+        return View();
+    }
+
 
     [HttpPost]
     public IActionResult Login(AuthReq req)
     {
-        var Res = ResponseConfig.PostData("api/Accounts/signin", JsonConvert.SerializeObject(req));
+        var conn = $"api/Accounts/signin";
+        var Res = PostData(conn, JsonConvert.SerializeObject(req));
         if (!Res.Result.IsSuccessStatusCode)
             return StatusCode(StatusCodes.Status500InternalServerError);
 
@@ -129,20 +156,60 @@ public class HomeController : Controller
 
         HttpContext.Session.SetString("user", Res.Result.Content.ReadAsStringAsync().Result);
 
-        validateToken(user!.AccessToken!.Replace("\"", ""));
+        ValidateToken(user!.AccessToken!.Replace("\"", ""));
 
         Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions 
         { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
         return RedirectToAction("index");
     }
-    
+
+    public IActionResult Signup()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Signup(SignUpReq req)
+    {
+        var conn = $"api/Accounts/signup";
+        var Res = PostData(conn, JsonConvert.SerializeObject(req));
+        if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+        return RedirectToAction("Signup");
+    }
+
+    [HttpGet]
+    public IActionResult Forgot()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Forgot(string email)
+    {
+        var conn = $"api/Accounts/reset/{email}";
+        var Res = GetData(conn);
+        if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+        return RedirectToAction("Forgot");
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    [Route("/logout")]
+    public IActionResult signout()
+    {
+        Response.Cookies.Delete("accessToken");
+        Response.Cookies.Delete("refreshToken");
+        return RedirectToAction("index");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-    private void validateToken(string token)
+    private void ValidateToken(string token)
     {
         try
         {
@@ -180,5 +247,23 @@ public class HomeController : Controller
         {
             throw new Exception(ex.Message);
         }
+    }
+
+    public async Task<HttpResponseMessage> PostData(string targerAddress, string content)
+    {
+        var client = new HttpClient();
+        client.BaseAddress = new Uri(BaseUrl);
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies["accessToken"]);
+        }
+        else
+        {
+            client.DefaultRequestHeaders.Add("refreshToken", HttpContext.Request.Cookies["refreshToken"]);
+        }
+        var Response = await client.PostAsync(targerAddress, new StringContent(content, Encoding.UTF8, "application/json"));
+        return Response;
     }
 }

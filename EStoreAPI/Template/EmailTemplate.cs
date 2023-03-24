@@ -9,6 +9,8 @@ namespace EStoreAPI.Template
     {
 
         public static String RECOVERY_EMAIL_TEMPLATE = "Hi {0},<br /><br />Your reset password is {1}.<br /><br />Thank You.";
+
+        public static String EMAIL_TEMPLATE = "Hi {0},<br /><br />Your email is {1}.<br /> <br />Your password is {2}.<br /><br />Thank You.";
         public static String OrderInvoiceTemplate(OrderRes order, string email, string res)
         {
             string content = "";

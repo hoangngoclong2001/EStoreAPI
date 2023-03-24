@@ -99,7 +99,8 @@ namespace EStoreAPI.Controllers
                 employees.ForEach(async e =>
                 {
                     isSave = await repository.Save(e);
-                    if (isSave) isSend = MailConfig.SendRecoveryMail(e.Email!, e.Password!, configuration);
+                    var fullName = $"{e.FirstName} {e.LastName}";
+                    if (isSave) isSend = MailConfig.SendMail(fullName ,e.Email!, e.Password!, configuration);
                 });
                 if (isSave && isSend) return Ok(isSave);
             }
@@ -132,6 +133,8 @@ namespace EStoreAPI.Controllers
         {
             if (request is null) return BadRequest();
             var account = await repository.Account(request);
+            if(account.Customer is not null) if(account.Customer.ContactName!.Contains("(deactive)")) return BadRequest();
+            if (account.Employee is not null) if (account.Employee.Title!.Contains("(deactive)")) return BadRequest();
             user.Account = account;
             user.AccessToken = JWTConfig.CreateToken(user, configuration);
             SetRefreshToken(JWTConfig.GenerateRefreshToken());
