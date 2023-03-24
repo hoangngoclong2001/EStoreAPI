@@ -31,7 +31,7 @@ namespace DataAccess.DAO
             return customers;
         }
 
-        public static async Task<Customer> GetCustomerById(string? id)
+        public static async Task<Customer?> GetCustomerById(string? id)
         {
             Customer? customer;
             using (var context = new PRN231DBContext())
@@ -39,7 +39,7 @@ namespace DataAccess.DAO
                 customer = await context
                     .Customers.SingleOrDefaultAsync(x => x.CustomerId.Equals(id));
             }
-            return customer ?? new();
+            return customer ?? null;
         }
 
         public static async Task<string> SaveCustomer(Customer customer)

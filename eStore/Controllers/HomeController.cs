@@ -146,6 +146,20 @@ public class HomeController : Controller
         return RedirectToAction("index");
     }
 
+    public IActionResult Signup()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Signup(SignUpReq req)
+    {
+        var conn = $"api/Accounts/signup";
+        var Res = PostData(conn, JsonConvert.SerializeObject(req));
+        if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
+        return RedirectToAction("Signup");
+    }
+
     [HttpGet]
     public IActionResult Forgot()
     {
@@ -155,10 +169,10 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Forgot(string email)
     {
-        var conn = $"api/Accounts/reset";
+        var conn = $"api/Accounts/reset/{email}";
         var Res = GetData(conn);
         if (!Res.Result.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
-        return View();
+        return RedirectToAction("Forgot");
     }
 
 

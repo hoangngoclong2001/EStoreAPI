@@ -59,8 +59,8 @@ namespace EStoreAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        [Route("reset")]
+        [HttpGet]
+        [Route("reset/{email}")]
         public async Task<IActionResult> Get(string? email)
         {
             if (email is null) return BadRequest();
@@ -90,7 +90,8 @@ namespace EStoreAPI.Controllers
                 employees.ForEach(async e =>
                 {
                     isSave = await repository.Save(e);
-                    if (isSave) isSend = MailConfig.SendRecoveryMail(e.Email!, e.Password!, configuration);
+                    var fullName = $"{e.FirstName} {e.LastName}";
+                    if (isSave) isSend = MailConfig.SendMail(fullName ,e.Email!, e.Password!, configuration);
                 });
                 if (isSave && isSend) return Ok(isSave);
             }
