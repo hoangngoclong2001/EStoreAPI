@@ -15,6 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="~/js/store.js"></script>
     <title>Long</title>
 </head>
 
@@ -42,8 +43,7 @@
     <div class="wrapper">
                     
         <div class="left">
-                        <img src="~/images/person.png" alt="user" width="200">
-                        <h4></h4>
+   <h4>Hello , @Model.ContactName</h4>
         </div>
           
         <div class="right">
@@ -82,11 +82,12 @@
                                 </div>
                 </div>
             </div>
-                        <div class="projects">
-                            
-                            </div>
-                            <br/>
-                            
+                        <div class="data">
+                            <a asp-action="EditProduct" asp-route-id="@cus.CustomerId">Edit profile</a>
+                    </div>
+                </div>
+                      
+                    
                       
                 </div>
             </div>
@@ -140,6 +141,7 @@
 </body>
 
 </html>
+
 <style>
     import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
     * {

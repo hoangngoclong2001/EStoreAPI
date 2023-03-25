@@ -23,7 +23,7 @@ namespace EStoreAPI.Controllers
         public EmployeesController(IMapper _mapper) => mapper = _mapper;
 
 
-        [Authorize(Policy = "EmpOnly")]
+    //    [Authorize(Policy = "EmpOnly")]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PaginationParams @params, string? name, int? dep, string? courtesy, string? title, DateTime? from, DateTime? to)
         {            
@@ -33,7 +33,7 @@ namespace EStoreAPI.Controllers
             return Ok(data.Select(mapper.Map<Employee, EmpRes>).ToList());
         }
 
-        [Authorize(Policy = "EmpOnly")]
+    //    [Authorize(Policy = "EmpOnly")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int? id)
         {
@@ -42,7 +42,7 @@ namespace EStoreAPI.Controllers
             return employee is null ? NotFound() : Ok(mapper.Map<EmpRes>(employee));
         }
 
-        [Authorize(Policy = "EmpOnly")]
+     //   [Authorize(Policy = "EmpOnly")]
         [HttpPost]
         public async Task<IActionResult> Post(EmpReq emp)
         {
@@ -52,7 +52,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-        [Authorize(Policy = "EmpOnly")]
+   //     [Authorize(Policy = "EmpOnly")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int? id, EmpReq req)
         {
@@ -62,7 +62,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
         
-        [Authorize(Policy = "EmpOnly")]
+  //      [Authorize(Policy = "EmpOnly")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int? id)
         {

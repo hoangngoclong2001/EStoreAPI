@@ -83,6 +83,12 @@ public class HomeController : Controller
         ViewBag.Customer = cus;
         return View(account);
     }
+    [HttpGet]
+    [Route("/ChangePass")]
+    public IActionResult ChangePass()
+    {
+        return View();
+    }
 
     [HttpGet]
     [Route("/cart")]
