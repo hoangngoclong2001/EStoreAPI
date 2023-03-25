@@ -89,6 +89,10 @@
                 <div class="containerproduct">
                     <form asp-action="AddProduct" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <img id="preview" src="#" width="120" height="100" class="hidden" />
+                        <br />
+                        @Html.TextBox("fileImage", "", new { type = "file", accept = "image/*"})
+                        <br />
                         <label for="ProductName"><b>ProductName(*)</b></label>
                         <input asp-for="ProductName" type="text" placeholder="ProductName" required>
                         <br>
@@ -128,6 +132,14 @@
 
         </div>
     </div>
+    <script>
+            fileImage.onchange = evt => {
+                const [file] = fileImage.files
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    document.getElementById("preview").classList.remove("hidden");
+                }
+            }
+    </script>
 </body>
-
 </html>

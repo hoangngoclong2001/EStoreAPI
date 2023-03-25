@@ -254,6 +254,8 @@ namespace BusinessObject.Models
 
                 entity.Property(e => e.ReorderLevel).HasDefaultValueSql("((0))");
 
+                entity.Property(e => e.Picture).HasColumnType("image");
+
                 entity.Property(e => e.UnitPrice)
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");

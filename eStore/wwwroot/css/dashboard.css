@@ -736,3 +736,7 @@ table tbody tr {
     letter-spacing: 0.1rem;
     margin-bottom: 1.5rem;
 }
+
+.hidden {
+    display:none;
+}

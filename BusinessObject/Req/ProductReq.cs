@@ -17,5 +17,6 @@ namespace BusinessObject.Req
         public short? UnitsOnOrder { get; set; }
         public short? ReorderLevel { get; set; }
         public bool Discontinued { get; set; }
+        public byte[]? Picture { get; set; }
     }
 }

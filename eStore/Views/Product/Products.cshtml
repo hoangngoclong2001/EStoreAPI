@@ -165,10 +165,47 @@
 
 
                     <div class="records table-responsive">
-                         
+
                         <div class="record-header">
                             <div class="add" style="float: right;">
                                 <button>Add record</button>
+                                <span>Entries</span>
+                                <form asp-action="products">
+                                    @if (categoryId is not null)
+                                    {
+                                        <input type="hidden" name="categoryId" value="@categoryId">
+                                    }
+                                    @if (search is not null)
+                                    {
+                                        <input type="hidden" name="searcj" value="@search">
+                                    }
+                                    <select name="Item" onchange="this.form.submit()">
+                                        @if (ViewBag.Item == 10)
+                                        {
+                                            <option value="10" selected>10</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="10">10</option>
+                                        }
+                                        @if (ViewBag.Item == 30)
+                                        {
+                                            <option value="30" selected>30</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="30">30</option>
+                                        }
+                                        @if (ViewBag.Item == 50)
+                                        {
+                                            <option value="50" selected>50</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="50">50</option>
+                                        }
+                                    </select>
+                                </form>
                             </div>
                             <div class="browse">
                                 <form asp-action="products" defaultbutton="SubmitButton">
@@ -178,6 +215,10 @@
                                         {
                                             <input type="hidden" name="categoryId" value="@categoryId">
                                         }
+                                        @if (@ViewBag.Item is not null)
+                                        {
+                                            <input type="hidden" name="Item" value="@ViewBag.Item">
+                                        }
                                         <input type="search" placeholder="Search" name="search" value="@search" class="record-search">
                                     }
                                     else
@@ -186,12 +227,19 @@
                                         {
                                             <input type="hidden" name="categoryId" value="@categoryId">
                                         }
-
+                                        @if (@ViewBag.Item is not null)
+                                        {
+                                            <input type="hidden" name="categoryId" value="@ViewBag.Item">
+                                        }
                                         <input type="search" placeholder="Search" name="search" class="record-search">
                                     }
                                 </form>
                                 <form asp-action="products">
                                     <input type="hidden" name="search" value="@search" />
+                                    @if (@ViewBag.Item is not null)
+                                    {
+                                        <input type="hidden" name="Item" value="@ViewBag.Item">
+                                    }
                                     <select name="categoryId" id="" onchange="this.form.submit()">
                                         <option value="">Remove selection</option>
 
@@ -221,29 +269,38 @@
 
                                     <tr>
 
-                                        <th><span class="las la-sort"></span> ProductID</th>
-                                        <th><span class="las la-sort"></span> Image</th>
-                                        <th><span class="las la-sort"></span> ProductName</th>
-                                        <th><span class="las la-sort"></span> UnitPrice</th>
-                                        <th><span class="las la-sort"></span> QuantityPerUnit</th>
-                                        <th><span class="las la-sort"></span> UnitsInStock</th>
-                                        <th><span class="las la-sort"></span> Category</th>
-                                        <th><span class="las la-sort"></span> UnitsOnOrder</th>
-                                        <th><span class="las la-sort"></span> ReorderLevel</th>
-                                        <th><span class="las la-sort"></span> Discontinued</th>
-                                        <th><span class="las la-sort"></span> Action</th>
+                                        <th><span class=""></span> ProductID</th>
+                                        <th><span class=""></span> Image</th>
+                                        <th><span class=""></span> ProductName</th>
+                                        <th><span class=""></span> UnitPrice</th>
+                                        <th><span class=""></span> QuantityPerUnit</th>
+                                        <th><span class=""></span> UnitsInStock</th>
+                                        <th><span class=""></span> Category</th>
+                                        <th><span class=""></span> UnitsOnOrder</th>
+                                        <th><span class=""></span> ReorderLevel</th>
+                                        <th><span class=""></span> Discontinued</th>
+                                        <th><span class=""></span> Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                               @* @ViewData["deleteProduct"]*@
+                                    @* @ViewData["deleteProduct"]*@
                                     @foreach (var product in Model)
                                     {
                                         <tr>
                                             <td>#@product.ProductId</td>
                                             <td>
+                                                @{
+                                                    string imgDataURL = "";
+                                                    if (product.Picture is not null)
+                                                    {
+                                                        string imgBase64 = Convert.ToBase64String(product.Picture);
+                                                        imgDataURL = string.Format("data:image;base64,{0}", imgBase64);
+                                                    }
+                                                }
+
                                                 <div class="client">
                                                     <div class="client-img bg-img"
-                                                     style="background-image: url(~/images/3.jpeg)">
+                                                     style="background-image: url(@imgDataURL)">
                                                     </div>
                                                 </div>
                                             </td>
@@ -273,10 +330,10 @@
                                             </td>
                                             <td>
                                                 <div class="actions">
-                                                 <a href="/Product/delete/@product.ProductId"> <span class="las la-eye"></span></a>
+                                                    <a href="/Products/Delete/@product.ProductId"> <span class="las la-eye"></span></a>
 
                                                     <a asp-action="EditProduct" asp-route-id="@product.ProductId"><span class="las la-ellipsis-v"></span></a>
-                                        
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -310,6 +367,7 @@
                                     var pageHref = $"https://localhost:7290/Product/Products?page={currentPage - 1}&itemsperpage=10";
                                     if (search is not null) pageHref = $"{pageHref}&search={search}";
                                     if (categoryId is not null) pageHref = $"{pageHref}&categoryId={categoryId}";
+                                    pageHref = $"{pageHref}&item={ViewBag.Item}";
                                     <a href=@pageHref>&laquo;</a>
                                 }
                                 @for (int i = start; i <= end; i++)
@@ -319,7 +377,7 @@
                                         var pageHref = $"https://localhost:7290/Product/Products?page={i}&itemsperpage=10";
                                         if (search is not null) pageHref = $"{pageHref}&search={search}";
                                         if (categoryId is not null) pageHref = $"{pageHref}&dep={categoryId}";
-
+                                        pageHref = $"{pageHref}&item={ViewBag.Item}";
                                         <a href=@pageHref class="active">@i</a>
                                     }
                                     else
@@ -327,7 +385,7 @@
                                         var pageHref = $"https://localhost:7290/Product/Products?page={i}&itemsperpage=10";
                                         if (search is not null) pageHref = $"{pageHref}&search={search}";
                                         if (categoryId is not null) pageHref = $"{pageHref}&categoryId={categoryId}";
-
+                                        pageHref = $"{pageHref}&item={ViewBag.Item}";
                                         <a href=@pageHref>@i</a>
                                     }
                                 }
@@ -340,6 +398,7 @@
                                     var pageHref = $"https://localhost:7290/Product/Products?page={currentPage + 1}&itemsperpage=10";
                                     if (search is not null) pageHref = $"{pageHref}&search={search}";
                                     if (categoryId is not null) pageHref = $"{pageHref}&categoryId={categoryId}";
+                                    pageHref = $"{pageHref}&item={ViewBag.Item}";
                                     <a href=@pageHref>&raquo;</a>
                                 }
                             </div>

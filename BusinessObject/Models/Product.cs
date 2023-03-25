@@ -20,6 +20,7 @@ namespace BusinessObject.Models
         public short? UnitsOnOrder { get; set; }
         public short? ReorderLevel { get; set; }
         public bool Discontinued { get; set; }
+        public byte[]? Picture { get; set; }
 
         public virtual Category? Category { get; set; }
 
