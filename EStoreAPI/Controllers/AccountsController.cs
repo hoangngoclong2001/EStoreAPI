@@ -164,5 +164,15 @@ namespace EStoreAPI.Controllers
             user.TokenCreated = newRefreshToken.Created;
             user.TokenExpires = newRefreshToken.Expires;
         }
+
+        [AllowAnonymous]
+        [HttpPut("{email}")]
+        public async Task<IActionResult> Put(string? email, AccRes req)
+        {
+            if (email is null) return BadRequest();
+            var account = await repository.AccountEmail(email);
+            if (account is not null) return Ok(await repository.Update(mapper.Map<Account>(req)));
+            return Conflict();
+        }
     }
 }

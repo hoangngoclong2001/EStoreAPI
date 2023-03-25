@@ -29,5 +29,7 @@ namespace DataAccess
 
         Task<bool> Save(EmployeeAccount employee);
 
+        Task<bool> Update(Account account);
+
     }
 }

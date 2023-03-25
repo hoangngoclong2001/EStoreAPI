@@ -1,6 +1,8 @@
 ﻿@using BusinessObject.Models
 @using BusinessObject.Res
 @model IEnumerable<BusinessObject.Res.ProductRes>
+@using Newtonsoft.Json
+@using System.Security.Claims
 @{
 
     var categoryId = ViewBag.categoryId;
@@ -32,7 +34,10 @@
 <body>
     <nav>
         <div class="nav-responsive">
-            <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo">
+            <a href="https://localhost:7290/Home/Index">
+                <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo">
+            </a>
+            
             <form asp-action="Index" defaultbutton="SubmitButton">
                 <div class="nav-search">
                     <a href="">
@@ -54,10 +59,33 @@
                 </div>
             </form>
             <div class="access">
-                <a href="#" id="notification"><i class="fa fa-bell"></i></a>
-                <a href="#" id="cart"><i class="fa fa-shopping-cart"></i></a>
-                <a href="#" id="bars"><i class="fa fa-bars"></i></a>
-                <a href="#" id="account"><i class="fa fa-user-circle-o"></i></a>
+                  
+                
+                @if (((ClaimsIdentity)User.Identity).HasClaim(ClaimTypes.Role, "2"))
+                {
+                    <a href="https://localhost:7290/cart" id="cart"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="#" id="bars"><i class="fa fa-bars"></i></a>
+                <div class="dropdown" id="account">
+                    <button class="dropbtn"> <i class="fa fa-user-circle-o"></i></button>
+                    <div class="dropdown-content">
+                            <a href="https://localhost:7290/Home/Profile" style="font-size: 15px; ">Profile</a>
+                            <a href="https://localhost:7290/ChangePass" style="font-size: 15px;">Change password</a>
+                        <a href="https://localhost:7290/logout" style="font-size: 15px;">Sign out</a>
+
+                    </div>
+                </div>
+                }
+              
+                else if (((ClaimsIdentity)User.Identity).HasClaim(ClaimTypes.Role, "1"))
+                {
+                    <a href="https://localhost:7290/Product/Products" style="font-size: 35px; margin-right: 20px;"><i class="fa fa-tasks"></i></a>
+                    <a href="https://localhost:7290/logout" style="font-size: 35px;margin-right: 20px;"><i class="fa fa-sign-out"></i></a>
+                }
+                else
+                {
+                    <a href="https://localhost:7290/Home/Login" style="font-size: 35px; margin-right: 20px;"><i class="fa fa-sign-in"></i></a>
+                }
+                @* <a href="#" id="account"><i class="fa fa-user-circle-o"></i></a>*@
             </div>
         </div>
     </nav>

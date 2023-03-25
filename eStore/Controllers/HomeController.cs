@@ -83,6 +83,25 @@ public class HomeController : Controller
         ViewBag.Customer = cus;
         return View(account);
     }
+   
+    [HttpGet]
+    public IActionResult EditProfile(string? id)
+    {
+        var identity = (ClaimsIdentity)User.Identity;
+        var claims = identity.Claims.ToList();
+        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+        email = email ?? string.Empty;
+        var conn = $"api/Accounts/getEmail/{email}";
+        var Res = ResponseConfig.GetData(conn).Result;
+        var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
+      
+        var conn1 = $"api/Customers/{account.CustomerId}";
+        var Res2 = ResponseConfig.GetData(conn1).Result;
+        var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
+
+        return View(cus);
+    }
+
     [HttpGet]
     [Route("/ChangePass")]
     public IActionResult ChangePass()
@@ -90,6 +109,54 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpPost]
+    [Route("/ChangePass")]
+    public IActionResult ChangePass(AccRes acc)
+    {
+        var identity = (ClaimsIdentity)User.Identity;
+        var claims = identity.Claims.ToList();
+        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+        email = email ?? string.Empty;
+
+
+        var conn = $"api/Accounts/getEmail/{email}";
+        var Res = ResponseConfig.GetData(conn).Result;
+        var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
+
+        AccRes req = new AccRes
+        {
+            AccountId = account.AccountId,
+            Email = account.Email,
+            Password = acc.Password,
+            CustomerId = account.CustomerId,
+            EmployeeId = account.EmployeeId,    
+            Role= account.Role, 
+
+        };
+
+        var _conn = $"api/Accounts/{email}";
+        var Res2 = ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
+
+        return RedirectToAction("Profile");
+    }
+    [HttpPost]
+    public IActionResult EditProfile(CusRes pmp)
+    {
+        CusRes req = new CusRes
+        {
+            CustomerId = pmp.CustomerId,
+            CompanyName = pmp.CompanyName,
+            ContactName = pmp.ContactName,
+            ContactTitle = pmp.ContactTitle,
+            Address = pmp.Address,
+         
+        };
+
+        var _conn = $"api/Customers/{req.CustomerId}";
+        var Res = ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
+
+        return RedirectToAction("Profile");
+    }
     [HttpGet]
     [Route("/cart")]
     public IActionResult cart()

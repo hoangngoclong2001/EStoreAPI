@@ -1,5 +1,4 @@
-﻿@model BusinessObject.Res.AccRes
-
+﻿@model BusinessObject.Res.CusRes
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +22,8 @@
         <div class="nav-responsive">
             <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo">
             <div class="access">
-               <a href="https://localhost:7290/cart" id="cart"><i class="fa fa-shopping-cart"></i></a>
+
+                <a href="https://localhost:7290/cart" id="cart"><i class="fa fa-shopping-cart"></i></a>
                     <a href="#" id="bars"><i class="fa fa-bars"></i></a>
                 <div class="dropdown" id="account">
                     <button class="dropbtn"> <i class="fa fa-user-circle-o"></i></button>
@@ -38,49 +38,41 @@
     </nav>
     <main id="main">
         <div class="center-form">
-            <form asp-action="ChangePass" method="post" enctype="multipart/form-data">
-       @*         <label>Enter Old Password:</label>
-                <br/>
 
-                <input type="password" name="name" placeholder="Enter Old Password" >
-
-                <br><br>*@
-
-                <label>Enter New Password:</label>
-                <br />
-                <input type="password" id="password" placeholder="Enter New Password" asp-for="Password">
-
-                <br><br>
-                <label>Enter Confirm Password:</label>
+            <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="@Model.CustomerId" required>
+                <label>Enter CompanyName:</label>
                 <br />
 
-                <input type="password" id="confirm_password" placeholder="Enter Re-Password">
+                <input type="text" asp-for="CompanyName" placeholder="Enter CompanyName">
 
                 <br><br>
-                <button type="submit" >Confirm</button>
+
+                <label>Enter ContactName:</label>
+                <br />
+
+                <input type="text" asp-for="ContactName" placeholder="Enter ContactName">
+
+                <br><br>
+                <label>Enter ContactTitle:</label>
+                <br />
+
+                <input type="text" asp-for="ContactTitle" placeholder="Enter ContactTitle">
+
+                <br><br>
+
+                <label>Address:</label>
+                <br />
+
+                <input type="text" asp-for="Address" placeholder="Address">
+
+                <br><br>
+                <input type="submit">
 
             </form>
 
         </div>
-        <script>
-            var password = document.getElementById("password")
-                , confirm_password = document.getElementById("confirm_password");
 
-            function validatePassword() {
-                if (password.value != confirm_password.value) {
-                    confirm_password.setCustomValidity("Passwords Don't Match");
-                }
-                else if (password.value == null || confirm_password.ariaValueMax == null){
-                    confirm_password.setCustomValidity("Fill All Blank");
-                }
-                else {
-                    confirm_password.setCustomValidity('');
-                }
-            }
-
-            password.onchange = validatePassword;
-            confirm_password.onkeyup = validatePassword;
-        </script>
         </div>
         <footer>
             <p id="footer-title">
@@ -136,7 +128,7 @@
         padding: 30px;
     }
 
-    button {
+    input[type=submit] {
         width: 40%;
         background-color: #4CAF50;
         color: white;

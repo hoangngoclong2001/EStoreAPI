@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Models;
+using BusinessObject.Req;
 using BusinessObject.Res;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace BusinessObject.Mapper
     {
         public AccountMapper() {
             CreateMap<Account, AccRes>();
+            CreateMap<AccRes, Account>();
         }
     }
 }

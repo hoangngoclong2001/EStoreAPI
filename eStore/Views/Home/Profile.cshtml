@@ -30,10 +30,17 @@
         <div class="nav-responsive">
             <img src="~/images/phone-icon3.png" alt="image" class="logo" id="logo">
             <div class="access">
-                <a href="#" id="notification"><i class="fa fa-bell"></i></a>
-                <a href="#" id="cart"><i class="fa fa-shopping-cart"></i></a>
-                <a href="#" id="bars"><i class="fa fa-bars"></i></a>
-                <a href="#" id="account"><i class="fa fa-user-circle-o"></i></a>
+                 <a href="https://localhost:7290/cart" id="cart"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="#" id="bars"><i class="fa fa-bars"></i></a>
+                <div class="dropdown" id="account">
+                    <button class="dropbtn"> <i class="fa fa-user-circle-o"></i></button>
+                    <div class="dropdown-content">
+                            <a href="https://localhost:7290/Home/Profile" style="font-size: 15px; ">Profile</a>
+                        <a href="https://localhost:7290/ChangePass" style="font-size: 15px;">Change password</a>
+                        <a href="https://localhost:7290/logout" style="font-size: 15px;">Sign out</a>
+                    </div>
+                </div>
+                  
             </div>
         </div>
     </nav>
@@ -43,7 +50,8 @@
     <div class="wrapper">
                     
         <div class="left">
-   <h4>Hello , @Model.ContactName</h4>
+                        
+                        <h4>Hello , @cus.ContactName</h4>
         </div>
           
         <div class="right">
@@ -83,7 +91,7 @@
                 </div>
             </div>
                         <div class="data">
-                            <a asp-action="EditProduct" asp-route-id="@cus.CustomerId">Edit profile</a>
+                            <a asp-action="EditProfile" asp-route-id="@cus.CustomerId">Edit profile</a>
                     </div>
                 </div>
                       

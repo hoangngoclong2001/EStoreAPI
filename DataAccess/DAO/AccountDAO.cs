@@ -156,7 +156,15 @@ namespace DataAccess.DAO
 
             }
         }
-
+        public static async Task<bool> UpdateAccount(Account account)
+        {
+            using (var context = new PRN231DBContext())
+            {
+                context.Entry<Account>(account).State
+                = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                return await context.SaveChangesAsync() > 0;
+            }
+        }
         internal static Employee GetEmployee(EmployeeAccount employee)
         {
             return new Employee

@@ -28,5 +28,7 @@ namespace DataAccess.RepoImpl
         public async Task<bool> Save(EmpSignUpReq req) => await AccountDAO.SaveEmpAccount(req);
 
         public async Task<bool> Save(EmployeeAccount employee) => await AccountDAO.SaveEmployee(employee);
+
+        public async Task<bool> Update(Account account) => await AccountDAO.UpdateAccount(account);
     }
 }
