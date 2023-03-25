@@ -50,7 +50,7 @@ namespace EStoreAPI.Controllers
 
      //   [Authorize]
         [HttpPost]
-
+        [Route("save/{email}")]
         public async Task<IActionResult> Post(Order? order, string? email)
         {
             if (order is null || email is null) return BadRequest();

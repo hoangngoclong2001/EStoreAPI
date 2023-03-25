@@ -61,7 +61,7 @@
             <div class="access">
                   
                 
-                @if (((ClaimsIdentity)User.Identity).HasClaim(ClaimTypes.Role, "2"))
+                @if (((ClaimsIdentity)User.Identity!).HasClaim(ClaimTypes.Role, "2"))
                 {
                     <a href="https://localhost:7290/cart" id="cart"><i class="fa fa-shopping-cart"></i></a>
                     <a href="#" id="bars"><i class="fa fa-bars"></i></a>

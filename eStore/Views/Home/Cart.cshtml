@@ -8,7 +8,7 @@
     List<OrderDetailDTO> cart = new List<OrderDetailDTO>();
     if (!string.IsNullOrEmpty(Context.Session.GetString("cart")))
     {
-        cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(Context.Session.GetString("cart"));
+        cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(Context.Session.GetString("cart")!)!;
     }
 }
 
@@ -98,7 +98,7 @@
             <div id="cart-summary-content">Total amount: <span id="total" style="color:red">$@Total</span></div>
         </div>
         <form asp-action="cart" method="post">
-            @if (!((ClaimsIdentity)User.Identity).HasClaim(ClaimTypes.Role, "2"))
+            @if (!((ClaimsIdentity)User.Identity!).HasClaim(ClaimTypes.Role, "2"))
             {
                 <div id="customer-info">
                     <div id="customer-info-content">
