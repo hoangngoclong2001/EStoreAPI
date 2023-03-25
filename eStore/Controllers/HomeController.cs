@@ -101,16 +101,15 @@ public class HomeController : Controller
 
     [HttpPost]
     [Route("/ChangePass")]
-    public IActionResult ChangePass(AccRes acc)
+    public async Task<IActionResult>  ChangePass(AccRes acc)
     {
         var identity = (ClaimsIdentity)User.Identity;
         var claims = identity.Claims.ToList();
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email = email ?? string.Empty;
 
-
         var conn = $"api/Accounts/getEmail/{email}";
-        var Res = ResponseConfig.GetData(conn).Result;
+        var Res = await ResponseConfig.GetData(conn);
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
 
         AccRes req = new AccRes
@@ -130,7 +129,7 @@ public class HomeController : Controller
         return RedirectToAction("Profile");
     }
     [HttpPost]
-    public IActionResult EditProfile(CusRes pmp)
+    public async Task<IActionResult> EditProfile(CusRes pmp)
     {
         CusRes req = new CusRes
         {
@@ -143,7 +142,7 @@ public class HomeController : Controller
         };
 
         var _conn = $"api/Customers/{req.CustomerId}";
-        var Res = ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
+        var Res = await ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
 
         return RedirectToAction("Profile");
     }
@@ -391,7 +390,7 @@ public class HomeController : Controller
 
             Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
 
-            return Redirect("/");
+            return Redirect("/Home/Index");
         }
         ViewBag.ErrMsg = TempData["ErrorMessage"] as string;
         return View();
@@ -404,9 +403,10 @@ public class HomeController : Controller
         var conn = $"api/Accounts/signin";
         var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(req));
         if (!Res.IsSuccessStatusCode)
+        {
             TempData["ErrorMessage"] = "Wrong email or password";
-             return RedirectToAction("Login");
-
+            return RedirectToAction("Login");
+        }
         var user = JsonConvert.DeserializeObject<UserRes>(Res.Content.ReadAsStringAsync().Result);
 
         HttpContext.Session.SetString("user", Res.Content.ReadAsStringAsync().Result);
