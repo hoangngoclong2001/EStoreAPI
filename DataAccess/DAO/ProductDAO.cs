@@ -142,5 +142,25 @@ namespace DataAccess.DAO
                 return await context.SaveChangesAsync() > 0;
             }
         }
+        public static List<string> GetAllProductName()
+        {
+            var getAllName = new List<string>();
+            using (var context = new PRN231DBContext())
+            {
+                getAllName = context.Products.Select(c => c.ProductName).ToList();
+            }
+            return getAllName;
+        }
+        public static async Task<Product> GetProductByName(string? name)
+        {
+            Product? product;
+            using (var context = new PRN231DBContext())
+            {
+                product = await context
+                    .Products.Include(x => x.Category)
+                    .SingleOrDefaultAsync(x => x.ProductName.Equals(name));
+            }
+            return product ?? new();
+        }
     }
 }

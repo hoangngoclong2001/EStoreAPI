@@ -8,6 +8,7 @@ using DataAccess.RepoImpl;
 using EStoreAPI.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 
@@ -132,6 +133,23 @@ namespace EStoreAPI.Controllers
             var product = await repository.Product(id);
             if (product is not null) return Ok(await repository.Delete(product));
             return Conflict();
+        }
+
+        [HttpGet]
+        [Route("allProductName")]
+        public IActionResult GetAllProduct()
+                    => Ok(repository.GetAllProductName().ToList());
+
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("GetProductbyName/{name}")]
+
+        public async Task<IActionResult> GetProductbyName(string? name)
+        {
+            if (name is null) return BadRequest();
+            var product = await repository.GetProductByName(name);
+            return product is null ? NotFound() : Ok(mapper.Map<ProductRes>(product));
         }
     }
 }
