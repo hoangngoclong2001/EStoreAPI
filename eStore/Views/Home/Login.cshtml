@@ -15,6 +15,7 @@
             @using (Html.BeginForm("Login", "Home", FormMethod.Post))
             {
                 <h1>Sign in</h1>
+                <p>@ViewBag.ErrMsg</p>
                 <span>or use your account</span>
                 <input type="email" asp-for="@Model.Email" placeholder="Email" />
                 <input type="password" asp-for="@Model.Password" placeholder="Password" />
