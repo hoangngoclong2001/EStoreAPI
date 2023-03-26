@@ -288,7 +288,7 @@ namespace EStoreAPI.Config
                                                                     <tr>
                                                                         <td style=""font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 20px; vertical-align: top; "">
                                                                             {order.cus.ContactName}<br> 
-                                                                            {order.cus.Address}<br> 
+                                                                            
                                                                             {email}
                                                                         </td>
                                                                     </tr>
@@ -349,7 +349,7 @@ namespace EStoreAPI.Config
                                                                     </tr>
                                                                     <tr>
                                                                         <td style=""font-size: 12px; font-family: 'Open Sans', sans-serif; color: #5b5b5b; line-height: 20px; vertical-align: top; "">
-                                                                            {order.cus.ContactName} <br> {order.cus.Address}<br> T: 202-555-0171
+                                                                            {order.cus.ContactName} <br> T: 202-555-0171
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>

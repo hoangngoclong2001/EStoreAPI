@@ -13,5 +13,6 @@ namespace BusinessObject.Req
         public string? ContactName { get; set; }
         public string? ContactTitle { get; set; }
         public string? Address { get; set; }
+        public byte[]? Picture { get; set; }
     }
 }

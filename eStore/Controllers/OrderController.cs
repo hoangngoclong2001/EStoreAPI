@@ -64,32 +64,5 @@ namespace eStore.Controllers
             ViewData["pagination"] = pagination;
             return View(orders);
         }
-
-        public async Task<IActionResult> Download()
-        {
-            var conn = $"api/Orders/10303";
-            var Res = await ResponseConfig.GetData(conn);
-            var order = JsonConvert.DeserializeObject<OrderRes>(Res.Content.ReadAsStringAsync().Result);
-            string body = InvoiceConfig.GetBody(order, "nguyengiangnamtb01%40gmail.com");
-            {
-                HtmlLoadOptions objLoadOptions = new HtmlLoadOptions();
-                objLoadOptions.PageInfo.Margin.Bottom = 10;
-                objLoadOptions.PageInfo.Margin.Top = 20;
-
-                Document document = new Document(new MemoryStream(Encoding.UTF8.GetBytes(body)), objLoadOptions);
-                FileContentResult pdf;
-
-                using (var stream = new MemoryStream())
-                {
-                    document.Save(stream);
-                    pdf = new FileContentResult(stream.ToArray(), "application/pdf")
-                    {
-                        FileDownloadName = "Order.pdf"
-                    };
-
-                }
-                return pdf;
-            }
-        }
     }
 }

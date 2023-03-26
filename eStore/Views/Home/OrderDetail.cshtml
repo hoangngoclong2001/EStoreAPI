@@ -98,6 +98,12 @@
                         <div class="profile-order-content-col2">@i.ProductName</div>
                         <div class="profile-order-content-col3">@i.UnitPrice</div>
                         <div class="profile-order-content-col4">@i.Quantity</div>
+                        <div class="profile-order-content-col4">
+                            <form asp-action="download" method="post">
+                                <input name="orderId" value="@order.OrderId" type="hidden"/>
+                                <input type="submit" value="Download"/>
+                            </form>
+                        </div>
                         }
                     </div>
                 }

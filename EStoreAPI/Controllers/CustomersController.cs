@@ -61,6 +61,7 @@ namespace EStoreAPI.Controllers
         {
             if (id is null) return BadRequest();
             var customer = await repository.Customer(id);
+            if(customer.Picture is not null) req.Picture = customer.Picture;
             if (customer is not null) return Ok(await repository.Update(mapper.Map<Customer>(req)));
             return Conflict();
         }

@@ -17,6 +17,8 @@ using System.Drawing;
 using System.Security.Principal;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Aspose.Pdf;
+using EStoreAPI.Config;
 
 namespace eStore.Controllers;
 
@@ -128,9 +130,6 @@ public class HomeController : Controller
 
         return View(cus);
     }
-
-
-   
 
 
 
@@ -516,6 +515,7 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> OrderDetail()
     {
@@ -535,8 +535,37 @@ public class HomeController : Controller
         return View(oreder);
     }
 
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Download(int orderId)
+    {
+        var identity = (ClaimsIdentity)User.Identity!;
+        var claims = identity.Claims.ToList();
+        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+        var conn = $"api/Orders/{orderId}";
+        var Res = await ResponseConfig.GetData(conn);
+        var order = JsonConvert.DeserializeObject<OrderRes>(Res.Content.ReadAsStringAsync().Result);
+        string body = InvoiceConfig.GetBody(order!, email);
+        {
+            HtmlLoadOptions objLoadOptions = new HtmlLoadOptions();
+            objLoadOptions.PageInfo.Margin.Bottom = 10;
+            objLoadOptions.PageInfo.Margin.Top = 20;
 
+            Document document = new Document(new MemoryStream(Encoding.UTF8.GetBytes(body)), objLoadOptions);
+            FileContentResult pdf;
 
+            using (var stream = new MemoryStream())
+            {
+                document.Save(stream);
+                pdf = new FileContentResult(stream.ToArray(), "application/pdf")
+                {
+                    FileDownloadName = "Order.pdf"
+                };
+
+            }
+            return pdf;
+        }
+    }
 
 
     private void ValidateToken(string token)
