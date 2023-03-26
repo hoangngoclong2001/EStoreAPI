@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObject.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,9 @@ namespace BusinessObject.Res
         public string? ShipCountry { get; set; }
         public EmpOrderRes? emp { get; set; }
         public CusOrderRes? cus { get; set; }
+
+        
+        public  ProductRes? Product { get; set; }
         public  List<OrderDetailRes>? orderDetails { get; set; }
 
     }

@@ -41,7 +41,7 @@ namespace DataAccess.DAO
             }
             return customer ?? null;
         }
-
+        
         public static async Task<string> SaveCustomer(Customer customer)
         {
             customer.CustomerId = RandomUtils.GenerateId(5);
@@ -76,5 +76,15 @@ namespace DataAccess.DAO
                 return await context.SaveChangesAsync() > 0;
             }
         }
+        public static int GetNumberOfCustomer()
+        {
+            int accounts;
+            using (var context = new PRN231DBContext())
+            {
+                accounts = context.Customers.Distinct().Count();
+            }
+            return accounts;
+        }
+
     }
 }

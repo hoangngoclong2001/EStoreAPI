@@ -16,5 +16,6 @@ namespace DataAccess
         Task<bool> Save(Order order);
         Task<bool> Update(Order order);
         Task<bool> Delete(Order order);
+        Task<List<Order>> OrderMonth();
     }
 }

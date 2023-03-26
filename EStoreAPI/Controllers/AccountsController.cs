@@ -174,5 +174,20 @@ namespace EStoreAPI.Controllers
             if (account is not null) return Ok(await repository.Update(mapper.Map<Account>(req)));
             return Conflict();
         }
+
+
+       
+        //public async Task<IActionResult> GetAccountsCounts(AccRes req)
+        //{
+        //    if (req is not null) return Ok(await repository.Update(mapper.Map<Account>(req)));
+        //    return Conflict();
+        //}
+        //[AllowAnonymous]
+        //[HttpGet("{getCountAccount}")]
+        //public  Task<IActionResult> GetAccountsCounts()
+        //{
+        //    int data =  repository.GetNumberOfAccount();
+        //    return Ok(data);
+        //}
     }
 }

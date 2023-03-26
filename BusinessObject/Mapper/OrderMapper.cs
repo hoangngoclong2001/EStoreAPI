@@ -28,7 +28,7 @@ namespace BusinessObject.Mapper
                 opt => opt.MapFrom(src => src.Customer!.ContactTitle))
                 .ForPath(dest => dest.cus!.Address,
                 opt => opt.MapFrom(src => src.Customer!.Address))
-                .ForMember(dest => dest.orderDetails,
+                .ForPath(dest => dest.cus!.Address,
                 opt => opt.MapFrom(src => src.OrderDetails));
             CreateMap<OrderDetail, OrderDetailRes>()
                 .ForMember(dest => dest.ProductName, 

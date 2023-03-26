@@ -87,5 +87,20 @@ namespace DataAccess.DAO
                 return await context.SaveChangesAsync() > 0;
             }
         }
+       
+        public static async Task<List<Order>> getMonthOrder()
+        {
+            var orders = new List<Order>();
+            using (var context = new PRN231DBContext())
+            {
+                orders = await context.Orders.Include(x => x.Customer)
+                    .Include(x => x.Employee).ThenInclude(x => x!.Department)
+                    .Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(x => x.Category)
+                    .ToListAsync();
+                orders =  orders.Where(a => (a.OrderDate.HasValue && a.OrderDate.Value.Month == DateTime.Today.Month) && (a.OrderDate.HasValue && a.OrderDate.Value.Year == DateTime.Today.Year)).ToList();
+            
+            }
+            return orders;
+        }
     }
 }

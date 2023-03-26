@@ -34,6 +34,7 @@ namespace DataAccess.DAO
             }
             return accounts;
         }
+       
         public static async Task<Account> AccountEmail(string ? email)
         {
             Account? account;
@@ -70,7 +71,7 @@ namespace DataAccess.DAO
             {
                 account = await context.Accounts
                     .Where(a => a.Email!.Equals(req.Email) 
-                && a.Password!.Equals(req.Password)).Include(x => x.Customer).Include(x => x.Employee).FirstOrDefaultAsync(); ;
+                && a.Password!.Equals(req.Password)).Include(x => x.Customer).Include(x => x.Employee).FirstOrDefaultAsync(); 
             }
             return account ?? new();
         }
@@ -165,7 +166,7 @@ namespace DataAccess.DAO
                 return await context.SaveChangesAsync() > 0;
             }
         }
-        internal static Employee GetEmployee(EmployeeAccount employee)
+          public static Employee GetEmployee(EmployeeAccount employee)
         {
             return new Employee
             {
@@ -179,5 +180,6 @@ namespace DataAccess.DAO
                 TitleOfCourtesy = employee.TitleOfCourtesy
             };
         }
+      
     }
 }

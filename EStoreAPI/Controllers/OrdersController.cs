@@ -103,5 +103,12 @@ namespace EStoreAPI.Controllers
                  return pdf;
              } 
         }
+        [HttpGet]
+        [Route("OrderMonth")]
+        public async Task<IActionResult> GetTotalEmployees()
+        {
+            var data = await repository.OrderMonth();
+            return Ok(data.Count());
+        }
     }
 }
