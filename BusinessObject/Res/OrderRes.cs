@@ -24,7 +24,6 @@ namespace BusinessObject.Res
         public EmpOrderRes? emp { get; set; }
         public CusOrderRes? cus { get; set; }
 
-        public  ProductRes? Product { get; set; }
         public  List<OrderDetailRes>? orderDetails { get; set; }
 
     }

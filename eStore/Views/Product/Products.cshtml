@@ -173,8 +173,7 @@
                     <div class="records table-responsive">
 
                         <div class="record-header">
-                            <div class="add" style="float: right;">
-                                <button>Add record</button>
+                            <div class="add" style="float: right;">                                
                                 <span>Entries</span>
                                 <form asp-action="products">
                                     @if (categoryId is not null)
@@ -212,6 +211,7 @@
                                         }
                                     </select>
                                 </form>
+                                <button>Add record</button>
                             </div>
                             <div class="browse">
                                 <form asp-action="products" defaultbutton="SubmitButton">
