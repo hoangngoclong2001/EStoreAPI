@@ -149,7 +149,7 @@ namespace EStoreAPI.Controllers
         {
             if (name is null) return BadRequest();
             var product = await repository.GetProductByName(name);
-            return product is null ? NotFound() : Ok(mapper.Map<ProductRes>(product));
+            return product is null ? NotFound() : Ok(product);
         }
     }
 }

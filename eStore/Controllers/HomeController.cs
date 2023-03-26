@@ -56,42 +56,45 @@ public class HomeController : Controller
         ViewBag.productSales = productSales;
         return View(products);
     }
-  
+
+    [Authorize]  
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        var identity = (ClaimsIdentity)User.Identity;
+        var identity = (ClaimsIdentity)User.Identity!;
         var claims = identity.Claims.ToList();
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email= email ?? string.Empty;   
         var conn = $"api/Accounts/getEmail/{email}";
         var Res = await ResponseConfig.GetData(conn);
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
-        var conn1 = $"api/Customers/{account.CustomerId}";
+        var conn1 = $"api/Customers/{account!.CustomerId}";
         var Res2 = await ResponseConfig.GetData(conn1);
         var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
         ViewBag.Customer = cus;
         return View(account);
     }
-   
+
+    [Authorize]      
     [HttpGet]
-    public IActionResult EditProfile(string? id)
+    public async Task<IActionResult> EditProfile(string? id)
     {
-        var identity = (ClaimsIdentity)User.Identity;
+        var identity = (ClaimsIdentity)User.Identity!;
         var claims = identity.Claims.ToList();
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email = email ?? string.Empty;
         var conn = $"api/Accounts/getEmail/{email}";
-        var Res = ResponseConfig.GetData(conn).Result;
+        var Res = await ResponseConfig.GetData(conn);
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
       
-        var conn1 = $"api/Customers/{account.CustomerId}";
-        var Res2 = ResponseConfig.GetData(conn1).Result;
+        var conn1 = $"api/Customers/{account!.CustomerId}";
+        var Res2 = await ResponseConfig.GetData(conn1);
         var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
 
         return View(cus);
     }
 
+    [Authorize]
     [HttpGet]
     [Route("/ChangePass")]
     public IActionResult ChangePass()
@@ -99,11 +102,12 @@ public class HomeController : Controller
         return View();
     }
 
+    [Authorize]
     [HttpPost]
     [Route("/ChangePass")]
-    public async Task<IActionResult>  ChangePass(AccRes acc)
+    public async Task<IActionResult> ChangePass(AccRes acc)
     {
-        var identity = (ClaimsIdentity)User.Identity;
+        var identity = (ClaimsIdentity)User.Identity!;
         var claims = identity.Claims.ToList();
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email = email ?? string.Empty;
@@ -114,7 +118,7 @@ public class HomeController : Controller
 
         AccRes req = new AccRes
         {
-            AccountId = account.AccountId,
+            AccountId = account!.AccountId,
             Email = account.Email,
             Password = acc.Password,
             CustomerId = account.CustomerId,
@@ -128,6 +132,7 @@ public class HomeController : Controller
 
         return RedirectToAction("Profile");
     }
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> EditProfile(CusRes pmp)
     {
@@ -171,18 +176,18 @@ public class HomeController : Controller
                     {
                         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("cart")))
                         {
-                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart"));
+                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart")!)!;
                             foreach (var item in cart)
                             {
                                 if (item.Product.ProductName == orderDto.name)
                                 {
                                     item.Quantity++;
-                                    item.Total = (decimal)item.Product.UnitPrice * item.Quantity;
+                                    item.Total = (decimal)item.Product.UnitPrice! * item.Quantity;
                                     break;
                                 }
                                 else
                                 {
-                                    AddToCart(cart, orderDto.name);
+                                    await AddToCart(cart, orderDto.name);
                                     break;
                                 }
                             }
@@ -191,7 +196,7 @@ public class HomeController : Controller
                         else
                         {
                             List<OrderDetailDTO> cart = new List<OrderDetailDTO>();
-                            AddToCart(cart, orderDto.name);
+                            await AddToCart(cart, orderDto.name);
                             HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
                         }
                     }
@@ -201,18 +206,18 @@ public class HomeController : Controller
                     {
                         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("cart")))
                         {
-                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart"));
+                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart")!)!;
                             foreach (var item in cart)
                             {
                                 if (item.Product.ProductName == orderDto.name)
                                 {
                                     item.Quantity++;
-                                    item.Total = (decimal)item.Product.UnitPrice * item.Quantity;
+                                    item.Total = (decimal)item.Product.UnitPrice! * item.Quantity;
                                     break;
                                 }
                                 else
                                 {
-                                    AddToCart(cart, orderDto.name);
+                                    await AddToCart(cart, orderDto.name);
                                     break;
                                 }
                             }
@@ -221,7 +226,7 @@ public class HomeController : Controller
                         else
                         {
                             List<OrderDetailDTO> cart = new List<OrderDetailDTO>();
-                            AddToCart(cart, orderDto.name);
+                            await AddToCart(cart, orderDto.name);
                             HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(cart));
                         }
                     }
@@ -231,7 +236,7 @@ public class HomeController : Controller
                     {
                         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("cart")))
                         {
-                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart"));
+                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart")!)!;
                             foreach (var item in cart)
                             {
                                 if (item.Product.ProductName == orderDto.name)
@@ -249,13 +254,13 @@ public class HomeController : Controller
                     {
                         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("cart")))
                         {
-                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart"));
+                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart")!)!;
                             foreach (var item in cart)
                             {
                                 if (item.Product.ProductName == orderDto.name)
                                 {
                                     item.Quantity++;
-                                    item.Total = (decimal)item.Product.UnitPrice * item.Quantity;
+                                    item.Total = (decimal)item.Product.UnitPrice! * item.Quantity;
                                     break;
                                 }
                             }
@@ -268,13 +273,13 @@ public class HomeController : Controller
                     {
                         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("cart")))
                         {
-                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart"));
+                            List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart")!)!;
                             foreach (var item in cart)
                             {
                                 if (item.Product.ProductName == orderDto.name)
                                 {
                                     item.Quantity--;
-                                    item.Total = (decimal)item.Product.UnitPrice * item.Quantity;
+                                    item.Total = (decimal)item.Product.UnitPrice! * item.Quantity;
                                     if (item.Quantity <= 0)
                                         cart.Remove(item);
 
@@ -291,52 +296,51 @@ public class HomeController : Controller
                 case "ORDER":
                     if (!string.IsNullOrEmpty(HttpContext.Session.GetString("cart")))
                     {
-                        List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart"));
-                        if (string.IsNullOrEmpty(HttpContext.Session.GetString("user")))
+                        List<OrderDetailDTO> cart = JsonConvert.DeserializeObject<List<OrderDetailDTO>>(HttpContext.Session.GetString("cart")!)!;
+                        var identity = (ClaimsIdentity)User.Identity!;
+                        var claims = identity.Claims.ToList();
+                        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+                        if (email is null)
                             return Redirect("/Home/Index");
 
-                        UserRes user = JsonConvert.DeserializeObject<UserRes>(HttpContext.Session.GetString("user"));
+                        var conn = $"api/Accounts/getEmail/{email}";
+                        var AccRes = await ResponseConfig.GetData(conn);
+                        var account = JsonConvert.DeserializeObject<AccRes>(AccRes.Content.ReadAsStringAsync().Result);
+
+                        var conn1 = $"api/Customers/{account!.CustomerId}";
+                        var Res2 = await ResponseConfig.GetData(conn1);
+                        var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
+
                         List<OrderDetail> orderDetail = new List<OrderDetail>();
                         foreach (var item in cart)
                         {
                             OrderDetail product = new OrderDetail
                             {
                                 ProductId = item.Product.ProductId,
-                                UnitPrice = (decimal)item.Product.UnitPrice,
+                                UnitPrice = (decimal)item.Product.UnitPrice!,
                                 Quantity = (short)item.Quantity,
                                 Discount = 0
                             };
                             orderDetail.Add(product);
                         }
 
-                        if (((ClaimsIdentity)User.Identity).HasClaim(ClaimTypes.Role, "2"))
+                        if (((ClaimsIdentity)User.Identity!).HasClaim(ClaimTypes.Role, "2"))
                         {
                             Order order = new Order
                             {
-                                CustomerId = user.Account.CustomerId,
+                                CustomerId = cus!.CustomerId,
                                 OrderDate = DateTime.Now,
                                 RequiredDate = DateTime.Now.AddDays(30),
-                                ShipName = user.Account.Customer.CompanyName,
-                                ShipAddress = user.Account.Customer.Address,
+                                ShipName = cus!.CompanyName,
+                                ShipAddress = cus!.Address,
                                 OrderDetails = orderDetail
                             };
 
-                            var Res = await ResponseConfig.PostData("api/Orders/"+ user.Account.Email, JsonConvert.SerializeObject(order));
+                            var a = JsonConvert.SerializeObject(order);
+                            var Res = await ResponseConfig.PostData($"api/Orders/save/{email}", JsonConvert.SerializeObject(order));
                             if (!Res.IsSuccessStatusCode)
                                 return StatusCode(StatusCodes.Status500InternalServerError);
-
-                            Order confirmedOrder = JsonConvert.DeserializeObject<Order>(Res.Content.ReadAsStringAsync().Result);
-
-                            //string body = WriteEmailBody(confirmedOrder);
-
-                            //MailMessage mail = new MailMessage();
-                            //mail.To.Add("nghiahthe153608@fpt.edu.vn");
-                            //mail.From = new MailAddress("nghiahthe153608@fpt.edu.vn");
-                            //mail.Subject = "Invoice Details";
-                            //mail.Body = body;
-                            //mail.IsBodyHtml = true;
-                            //smtp.Send(mail);
-                            HttpContext.Session.SetString("cart", "");
+                            HttpContext.Session.Remove("cart");
                         }
                     }
                     return Redirect("/Home/Index");
@@ -348,7 +352,7 @@ public class HomeController : Controller
     {
         var Res = await ResponseConfig.GetData("api/Products/GetProductbyName/" + name);
         var P = JsonConvert.DeserializeObject<Product>(Res.Content.ReadAsStringAsync().Result);
-        decimal Total = (decimal)P.UnitPrice * 1;
+        decimal Total = (decimal)P!.UnitPrice! * 1;
         cart.Add(new OrderDetailDTO { Product = P, Quantity = 1, Total = Total });
     }
 
@@ -362,7 +366,7 @@ public class HomeController : Controller
         var _Res = await ResponseConfig.GetData(_conn);
         var Res = await ResponseConfig.GetData(conn);
 
-        ProductRes products = JsonConvert.DeserializeObject<ProductRes>(Res.Content.ReadAsStringAsync().Result);
+        ProductRes products = JsonConvert.DeserializeObject<ProductRes>(Res.Content.ReadAsStringAsync().Result!)!;
 
         List<CateSelectRes>? category = JsonConvert.DeserializeObject<List<CateSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
         ViewBag.categories = category;
