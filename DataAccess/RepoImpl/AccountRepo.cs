@@ -31,5 +31,10 @@ namespace DataAccess.RepoImpl
 
         public async Task<bool> Update(Account account) => await AccountDAO.UpdateAccount(account);
 
+        public  Page PageView() =>  AccountDAO.PageView();
+
+        public async Task<Page> GetPageByID() => await AccountDAO.GetPageByID();
+        public async Task<bool> UpdatePage(Page page) => await AccountDAO.UpdatePage(page);
+
     }
 }

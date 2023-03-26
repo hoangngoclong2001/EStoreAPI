@@ -14,7 +14,7 @@ namespace eStore.Controllers
     public class EmployeeController : Controller
     {
 
-        [Authorize(Roles = "1")]
+    //    [Authorize(Roles = "1")]
         public async Task<IActionResult> Employees(
             [FromQuery] PaginationParams @params,
             int item,
@@ -56,6 +56,37 @@ namespace eStore.Controllers
             var pagination = JsonConvert.DeserializeObject<PaginationMetadata>(Res.Headers.GetValues("X-Pagination").FirstOrDefault()!);
             List<DepSelectRes>? depart = JsonConvert.DeserializeObject<List<DepSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
 
+
+
+            var con3 = $"api/Accounts/totalCustomersAccounts";
+            var Res3 = await ResponseConfig.GetData(con3);
+
+            var a = JsonConvert.DeserializeObject(Res3.Content.ReadAsStringAsync().Result);
+
+            ViewBag.TotalCustomer = a;
+
+            var con4 = $"api/Accounts/Page";
+            var Res4 = await ResponseConfig.GetData(con4);
+
+            var viewPage = JsonConvert.DeserializeObject(Res4.Content.ReadAsStringAsync().Result);
+
+            ViewBag.ViewPage = viewPage;
+
+            var con5 = $"api/Orders/OrderMonth";
+            var Res5 = await ResponseConfig.GetData(con5);
+
+            var renuve = JsonConvert.DeserializeObject(Res5.Content.ReadAsStringAsync().Result);
+
+            ViewBag.renuve = renuve;
+
+
+            var con6 = $"api/Accounts/totalEmployeesAccounts";
+            var Res6 = await ResponseConfig.GetData(con6);
+
+            var employee = JsonConvert.DeserializeObject(Res6.Content.ReadAsStringAsync().Result);
+
+            ViewBag.employee = employee;
+
             ViewData["search"] = search;
             if (from is not null) ViewData["from"] = DateTime.Parse(from.ToString()!).ToString("yyyy-MM-dd");
             if (to is not null) ViewData["to"] = DateTime.Parse(to.ToString()!).ToString("yyyy-MM-dd");
@@ -68,7 +99,7 @@ namespace eStore.Controllers
             return View(employees);
         }
 
-        [Authorize(Roles = "1")]
+   //     [Authorize(Roles = "1")]
         public async Task<IActionResult> Upload(IFormFile? file)
         {
             if (file == null) return RedirectToAction("Employees");
@@ -78,7 +109,7 @@ namespace eStore.Controllers
             return RedirectToAction("Employees");
         }
 
-        [Authorize(Roles = "1")]
+  //      [Authorize(Roles = "1")]
         public async Task<IActionResult> Edit(int id)
         {
             var conn = $"api/Employees/{id}";
@@ -93,7 +124,7 @@ namespace eStore.Controllers
             return View(employee);
         }
 
-        [Authorize(Roles = "1")]
+    //    [Authorize(Roles = "1")]
         [HttpPost]
         public async Task<IActionResult> Edit(EmpRes emp)
         {
@@ -126,7 +157,7 @@ namespace eStore.Controllers
             return RedirectToAction("Employees");
         }
 
-        [Authorize(Roles = "1")]
+  //      [Authorize(Roles = "1")]
         public async Task<IActionResult> Status(int id)
         {
             var conn = $"api/Employees/{id}";

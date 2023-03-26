@@ -14,7 +14,7 @@ namespace eStore.Controllers
     public class CustomerController : Controller
     {
 
-        [Authorize(Roles = "1")]
+    //    [Authorize(Roles = "1")]
         public async Task<IActionResult> Customers([FromQuery] PaginationParams @params, string search, string title, int item)
         {
             if (@params.ItemsPerPage == 0) @params.ItemsPerPage = 10;
@@ -33,6 +33,37 @@ namespace eStore.Controllers
             var pagination = JsonConvert.DeserializeObject<PaginationMetadata>(Res.Headers.GetValues("X-Pagination").FirstOrDefault()!);
             HashSet<CusSelectRes>? listTitle = JsonConvert.DeserializeObject<HashSet<CusSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
 
+
+
+            var con3 = $"api/Accounts/totalCustomersAccounts";
+            var Res3 = await ResponseConfig.GetData(con3);
+
+            var a = JsonConvert.DeserializeObject(Res3.Content.ReadAsStringAsync().Result);
+
+            ViewBag.TotalCustomer = a;
+
+            var con4 = $"api/Accounts/Page";
+            var Res4 = await ResponseConfig.GetData(con4);
+
+            var viewPage = JsonConvert.DeserializeObject(Res4.Content.ReadAsStringAsync().Result);
+
+            ViewBag.ViewPage = viewPage;
+
+            var con5 = $"api/Orders/OrderMonth";
+            var Res5 = await ResponseConfig.GetData(con5);
+
+            var renuve = JsonConvert.DeserializeObject(Res5.Content.ReadAsStringAsync().Result);
+
+            ViewBag.renuve = renuve;
+
+
+            var con6 = $"api/Accounts/totalEmployeesAccounts";
+            var Res6 = await ResponseConfig.GetData(con6);
+
+            var employee = JsonConvert.DeserializeObject(Res6.Content.ReadAsStringAsync().Result);
+
+            ViewBag.employee = employee;
+
             ViewData["search"] = search;
             ViewData["pagination"] = pagination;
             listTitle = listTitle!.DistinctBy(x => x.ContactTitle).ToHashSet();
@@ -42,7 +73,7 @@ namespace eStore.Controllers
             return View(customers);
         }
 
-        [Authorize(Roles = "1")]
+    //    [Authorize(Roles = "1")]
         public async Task<IActionResult> Status(string id)
         {
             var conn = $"api/Customers/{id}";

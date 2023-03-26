@@ -180,6 +180,35 @@ namespace DataAccess.DAO
                 TitleOfCourtesy = employee.TitleOfCourtesy
             };
         }
-      
+
+        public static Page PageView()
+        {
+            Page? page;
+            using (var context = new PRN231DBContext())
+            {
+                page =  context.Pages.FirstOrDefault();
+            }
+            return page;
+        }
+        public static async Task<bool> UpdatePage(Page page)
+        {
+            using (var context = new PRN231DBContext())
+            {
+
+                context.Entry<Page>(page).State
+          = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                return await context.SaveChangesAsync() > 0;
+
+            }
+        }
+        public static async Task<Page> GetPageByID()
+        {
+            Page? page;
+            using (var context = new PRN231DBContext())
+            {
+                page = await context.Pages.Where(x=>x.Id == 1).FirstOrDefaultAsync();
+            }
+            return page ?? new();
+        }
     }
 }

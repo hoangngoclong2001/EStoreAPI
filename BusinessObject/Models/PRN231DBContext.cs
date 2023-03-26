@@ -25,6 +25,7 @@ namespace BusinessObject.Models
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<Page> Pages { get; set; } = null!;
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -236,6 +237,16 @@ namespace BusinessObject.Models
                     .HasConstraintName("FK_Order_Details_Products");
             });
 
+            modelBuilder.Entity<Page>(entity =>
+            {
+                entity.ToTable("Page");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Total).HasColumnName("total");
+            });
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.HasIndex(e => e.CategoryId, "CategoriesProducts");
@@ -268,6 +279,14 @@ namespace BusinessObject.Models
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Products_Categories");
+            });
+            modelBuilder.Entity<Page>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Page");
+
+                entity.Property(e => e.Total).HasColumnName("total");
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>

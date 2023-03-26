@@ -30,7 +30,10 @@ namespace DataAccess
         Task<bool> Save(EmployeeAccount employee);
 
         Task<bool> Update(Account account);
+        Page PageView();
+        Task<bool> UpdatePage(Page page);
 
+        Task<Page> GetPageByID();
 
     }
 }

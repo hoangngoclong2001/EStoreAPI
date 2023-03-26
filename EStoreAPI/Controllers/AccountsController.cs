@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,6 +24,8 @@ namespace EStoreAPI.Controllers
         private readonly IConfiguration configuration;
         public static UserRes user = new();
         private IAccountRepo repository = new AccountRepo();
+
+
         private IMapper mapper;
         public AccountsController(IMapper _mapper, IConfiguration configuration)
         {
@@ -175,19 +178,21 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
+        [HttpGet]
+        [Route("Page")]
+        public IActionResult GetAllProduct()
+                    => Ok(repository.PageView());
 
-       
-        //public async Task<IActionResult> GetAccountsCounts(AccRes req)
-        //{
-        //    if (req is not null) return Ok(await repository.Update(mapper.Map<Account>(req)));
-        //    return Conflict();
-        //}
-        //[AllowAnonymous]
-        //[HttpGet("{getCountAccount}")]
-        //public  Task<IActionResult> GetAccountsCounts()
-        //{
-        //    int data =  repository.GetNumberOfAccount();
-        //    return Ok(data);
-        //}
+ 
+        [HttpPut]
+        [Route("Page")]
+        public async Task<IActionResult> PutView(PageRes req)
+        {
+            var account = await repository.GetPageByID();
+            if (account is not null) return Ok(await repository.UpdatePage(mapper.Map<BusinessObject.Models.Page>(req)));
+            return Conflict();
+        }
+
+
     }
 }
