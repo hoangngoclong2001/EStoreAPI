@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Models;
 using BusinessObject.Res;
 using eStore.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -8,7 +9,8 @@ namespace eStore.Controllers
 {
     public class OrderController : Controller
     {
-       
+
+        [Authorize(Roles = "1")]
         public IActionResult OrderManager(
            [FromQuery] PaginationParams @params,
           

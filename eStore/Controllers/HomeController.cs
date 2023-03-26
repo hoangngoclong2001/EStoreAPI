@@ -13,6 +13,8 @@ using BusinessObject.Models;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Mail;
+using System.Drawing;
+using System.Security.Principal;
 
 namespace eStore.Controllers;
 
@@ -36,6 +38,11 @@ public class HomeController : Controller
                ? $"{conn2}"
                : $"{conn2}&categoryId={categoryId}";
 
+        if(User.Identity!.IsAuthenticated)
+        {
+            ViewBag.Account = await getAcc();
+        }
+
         var conn1 = $"api/Products/sale";
         var conn = $"api/Products/top4";
         var _conn = $"api/Categories/selectlist";
@@ -55,6 +62,34 @@ public class HomeController : Controller
         ViewBag.productlastest = productlastest;
         ViewBag.productSales = productSales;
         return View(products);
+    }
+
+
+
+    private async Task<CusRes?> getAcc()
+    {
+        var identity = (ClaimsIdentity)User.Identity!;
+        var claims = identity.Claims.ToList();
+        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+        var accConn = $"api/Accounts/getEmail/{email}";
+        var accRes = await ResponseConfig.GetData(accConn);
+        var account = JsonConvert.DeserializeObject<AccRes>(accRes.Content.ReadAsStringAsync().Result);
+        var conn1 = $"api/Customers/{account!.CustomerId}";
+        var Res2 = await ResponseConfig.GetData(conn1);
+        var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
+        return cus;
+    }
+
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> UploadImg(IFormFile file, string customerId)
+    {
+        var bytes = new byte[file.OpenReadStream().Length + 1];
+        file.OpenReadStream().Read(bytes, 0, bytes.Length);
+        var conn = $"api/Customers/UploadImage/{customerId}";
+        var Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(bytes));
+        return RedirectToAction("Profile");
     }
 
     [Authorize]  
@@ -389,7 +424,10 @@ public class HomeController : Controller
             var conn = $"api/Accounts/refresh-token";
             var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(u));
             if (!Res.IsSuccessStatusCode)
+            {
+                Response.Cookies.Delete("refreshToken");
                 return RedirectToAction("Login");
+            }
 
             var user = JsonConvert.DeserializeObject<UserRes>(Res.Content.ReadAsStringAsync().Result);
 

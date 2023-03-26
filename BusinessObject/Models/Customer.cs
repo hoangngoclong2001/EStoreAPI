@@ -18,6 +18,8 @@ namespace BusinessObject.Models
         public string? ContactTitle { get; set; }
         public string? Address { get; set; }
 
+        public byte[]? Picture { get; set; }
+
         [JsonIgnore]
         public virtual ICollection<Account> Accounts { get; set; }
 

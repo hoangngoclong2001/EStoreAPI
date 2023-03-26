@@ -65,6 +65,18 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
+        
+        [HttpPut]
+        [Route("UploadImage/{id}")]
+        public async Task<IActionResult> Put(string? id, byte[] bytes)
+        {
+            if (id is null) return BadRequest();
+            var customer = await repository.Customer(id);
+            customer.Picture = bytes;
+            if (customer is not null) return Ok(await repository.Update(customer));
+            return Conflict();
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string? id)
