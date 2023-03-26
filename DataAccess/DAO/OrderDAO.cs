@@ -63,6 +63,7 @@ namespace DataAccess.DAO
         {
             using (var context = new PRN231DBContext())
             {
+                order.OrderDetails.ToList().ForEach(x => x.Product = null);
                 await context.Orders.AddAsync(order);
                 return await context.SaveChangesAsync() > 0;
             }

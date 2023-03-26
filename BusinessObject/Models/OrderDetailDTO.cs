@@ -8,7 +8,7 @@ namespace BusinessObject.Models
 {
     public class OrderDetailDTO
     {
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
         public int Quantity { get; set; }
         public decimal Total { get; set; }
     }

@@ -316,7 +316,8 @@ public class HomeController : Controller
                         {
                             OrderDetail product = new OrderDetail
                             {
-                                ProductId = item.Product.ProductId,
+                                ProductId = item.Product!.ProductId,
+                                Product = item.Product,
                                 UnitPrice = (decimal)item.Product.UnitPrice!,
                                 Quantity = (short)item.Quantity,
                                 Discount = 0
@@ -377,14 +378,18 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> Login()
     {
+        if(!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
+        {
+            return Redirect("/Home/Index");
+        }
         if (string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]) && !string.IsNullOrEmpty(HttpContext.Request.Cookies["refreshToken"]))
         {
             UserRes u = new UserRes();
             u.RefreshToken = HttpContext.Request.Cookies["refreshToken"];
-            var conn = $"api/Accounts/signin";
+            var conn = $"api/Accounts/refresh-token";
             var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(u));
             if (!Res.IsSuccessStatusCode)
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return RedirectToAction("Login");
 
             var user = JsonConvert.DeserializeObject<UserRes>(Res.Content.ReadAsStringAsync().Result);
 
