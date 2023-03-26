@@ -111,5 +111,16 @@ namespace EStoreAPI.Controllers
             var data = await repository.OrderMonth();
             return Ok(data.Count());
         }
+
+
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("customer/{customerid}")]
+        public IActionResult GetCutomerID(string? customerid)
+                  => Ok(repository.getOrderByCustomer(customerid).Select(mapper.Map<Order, OrderRes>).ToList());
+       
+        
+      
     }
 }

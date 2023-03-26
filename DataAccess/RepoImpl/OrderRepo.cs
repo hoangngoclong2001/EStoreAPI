@@ -24,6 +24,8 @@ namespace DataAccess.RepoImpl
 
         public Task<bool> Delete(Order order) => OrderDAO.Delete(order);
 
+        public List<Order> getOrderByCustomer(string? customerid) => OrderDAO.GetOrderByCustomer(customerid);
+
         public async Task<List<Order>> OrderMonth() => await OrderDAO.getMonthOrder();
      //   public async Task<bool> Delete(Order order) => await OrderDAO.Delete(order);
     }

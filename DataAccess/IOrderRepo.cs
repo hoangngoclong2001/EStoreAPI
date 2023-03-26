@@ -16,6 +16,7 @@ namespace DataAccess
         Task<bool> Save(Order order);
         Task<bool> Update(Order order);
         Task<bool> Delete(Order order);
+        List<Order> getOrderByCustomer(string? id);
         Task<List<Order>> OrderMonth();
     }
 }

@@ -474,7 +474,11 @@ public class HomeController : Controller
         return RedirectToAction("index");
     }
 
-  
+    [HttpGet]
+    public  IActionResult Signup()
+    {
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> Signup(SignUpReq req)
@@ -513,9 +517,22 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public IActionResult OrderDetail()
+    public async Task<IActionResult> OrderDetail()
     {
-        return View();
+        var identity = (ClaimsIdentity)User.Identity!;
+        var claims = identity.Claims.ToList();
+        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+        email = email ?? string.Empty;
+        var conn = $"api/Accounts/getEmail/{email}";
+        var Res = await ResponseConfig.GetData(conn);
+        var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
+
+        var conn2 = $"api/Orders/customer/{account.CustomerId}";
+         var Res2 = await ResponseConfig.GetData(conn2);
+        var oreder = JsonConvert.DeserializeObject<List<OrderRes>>(Res2.Content.ReadAsStringAsync().Result);
+
+
+        return View(oreder);
     }
 
 

@@ -69,6 +69,19 @@ namespace DataAccess.DAO
             }
         }
 
+        public static List<Order> GetOrderByCustomer(string Customerid)
+        {
+            var orders = new List<Order>();
+            using (var context = new PRN231DBContext())
+            {
+                orders = context.Orders.Include(x => x.Customer)
+                    .Include(x => x.Employee).ThenInclude(x => x!.Department)
+                    .Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(x => x.Category)
+
+                    .Where(x=>x.CustomerId.Equals(Customerid)).ToList();
+            }
+            return orders;
+        }
         public static async Task<bool> Update(Order order)
         {
             using (var context = new PRN231DBContext())
