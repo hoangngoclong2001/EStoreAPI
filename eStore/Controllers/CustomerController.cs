@@ -14,7 +14,7 @@ namespace eStore.Controllers
     public class CustomerController : Controller
     {
 
-    //    [Authorize(Roles = "1")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Customers([FromQuery] PaginationParams @params, string search, string title, int item)
         {
             if (@params.ItemsPerPage == 0) @params.ItemsPerPage = 10;
@@ -73,7 +73,7 @@ namespace eStore.Controllers
             return View(customers);
         }
 
-    //    [Authorize(Roles = "1")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Status(string id)
         {
             var conn = $"api/Customers/{id}";

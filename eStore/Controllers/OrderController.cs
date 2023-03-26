@@ -9,7 +9,7 @@ namespace eStore.Controllers
 {
     public class OrderController : Controller
     {
-       
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> OrderManager(
            [FromQuery] PaginationParams @params,
           

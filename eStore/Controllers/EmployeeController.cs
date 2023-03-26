@@ -14,7 +14,7 @@ namespace eStore.Controllers
     public class EmployeeController : Controller
     {
 
-    //    [Authorize(Roles = "1")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Employees(
             [FromQuery] PaginationParams @params,
             int item,
@@ -99,7 +99,7 @@ namespace eStore.Controllers
             return View(employees);
         }
 
-   //     [Authorize(Roles = "1")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Upload(IFormFile? file)
         {
             if (file == null) return RedirectToAction("Employees");
@@ -109,7 +109,7 @@ namespace eStore.Controllers
             return RedirectToAction("Employees");
         }
 
-  //      [Authorize(Roles = "1")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Edit(int id)
         {
             var conn = $"api/Employees/{id}";
@@ -124,7 +124,7 @@ namespace eStore.Controllers
             return View(employee);
         }
 
-    //    [Authorize(Roles = "1")]
+      [Authorize(Roles = "1")]
         [HttpPost]
         public async Task<IActionResult> Edit(EmpRes emp)
         {
@@ -157,7 +157,7 @@ namespace eStore.Controllers
             return RedirectToAction("Employees");
         }
 
-  //      [Authorize(Roles = "1")]
+       [Authorize(Roles = "1")]
         public async Task<IActionResult> Status(int id)
         {
             var conn = $"api/Employees/{id}";

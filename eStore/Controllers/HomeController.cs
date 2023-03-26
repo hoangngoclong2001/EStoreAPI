@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net.Mail;
 using System.Drawing;
 using System.Security.Principal;
+using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace eStore.Controllers;
 
@@ -61,7 +63,25 @@ public class HomeController : Controller
         ViewData["pagination"] = pagination;
         ViewBag.productlastest = productlastest;
         ViewBag.productSales = productSales;
+
+
+
+        var con4 = $"api/Accounts/Page";
+        var Res4 = await ResponseConfig.GetData(con4);
+
+        var viewPage = JsonConvert.DeserializeObject<PageRes>(Res4.Content.ReadAsStringAsync().Result);
+
+        PageRes req123 = new PageRes
+        {
+            Id = 1,
+            Total = viewPage.Total+1,
+        };
+
+        var conn6 = $"api/Accounts/Page";
+        var Res5 = ResponseConfig.PutData(conn6, JsonConvert.SerializeObject(req123));
+
         return View(products);
+
     }
 
 
@@ -81,7 +101,7 @@ public class HomeController : Controller
     }
 
 
-    [Authorize]
+    [Authorize(Roles = "2")]
     [HttpPost]
     public async Task<IActionResult> UploadImg(IFormFile file, string customerId)
     {
@@ -92,7 +112,7 @@ public class HomeController : Controller
         return RedirectToAction("Profile");
     }
 
-    [Authorize]  
+    [Authorize(Roles = "2")]
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
@@ -110,7 +130,7 @@ public class HomeController : Controller
         return View(account);
     }
 
-    [Authorize]      
+    [Authorize(Roles = "2")]
     [HttpGet]
     public async Task<IActionResult> EditProfile(string? id)
     {
@@ -167,7 +187,8 @@ public class HomeController : Controller
 
         return RedirectToAction("Profile");
     }
-    [Authorize]
+    [Authorize(Roles = "2")]
+
     [HttpPost]
     public async Task<IActionResult> EditProfile(CusRes pmp)
     {
