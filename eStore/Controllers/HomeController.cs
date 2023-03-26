@@ -40,10 +40,7 @@ public class HomeController : Controller
                ? $"{conn2}"
                : $"{conn2}&categoryId={categoryId}";
 
-        if(User.Identity!.IsAuthenticated)
-        {
-            ViewBag.Account = await getAcc();
-        }
+
 
         var conn1 = $"api/Products/sale";
         var conn = $"api/Products/top4";
@@ -83,23 +80,6 @@ public class HomeController : Controller
         return View(products);
 
     }
-
-
-
-    private async Task<CusRes?> getAcc()
-    {
-        var identity = (ClaimsIdentity)User.Identity!;
-        var claims = identity.Claims.ToList();
-        var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-        var accConn = $"api/Accounts/getEmail/{email}";
-        var accRes = await ResponseConfig.GetData(accConn);
-        var account = JsonConvert.DeserializeObject<AccRes>(accRes.Content.ReadAsStringAsync().Result);
-        var conn1 = $"api/Customers/{account!.CustomerId}";
-        var Res2 = await ResponseConfig.GetData(conn1);
-        var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
-        return cus;
-    }
-
 
     [Authorize(Roles = "2")]
     [HttpPost]
@@ -458,6 +438,8 @@ public class HomeController : Controller
 
             Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
 
+            if (user.Account!.Role == 1) return Redirect("https://localhost:7290/Employee/Employees");
+
             return Redirect("/Home/Index");
         }
         ViewBag.ErrMsg = TempData["ErrorMessage"] as string;
@@ -483,6 +465,7 @@ public class HomeController : Controller
 
         Response.Cookies.Append("refreshToken", user.RefreshToken!, new CookieOptions 
         { Expires = user.TokenExpires, HttpOnly = true, SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict });
+        if (user.Account!.Role == 1) return Redirect("https://localhost:7290/Employee/Employees"); 
         return RedirectToAction("index");
     }
 

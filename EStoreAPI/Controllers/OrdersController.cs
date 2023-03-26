@@ -77,7 +77,7 @@ namespace EStoreAPI.Controllers
         }
 
     //    [Authorize]
-        [HttpPost]
+        [HttpGet]
         [Route("export")]
         public async Task<IActionResult> Export(int? id, string? email)
         {

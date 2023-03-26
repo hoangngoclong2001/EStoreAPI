@@ -1,9 +1,14 @@
-﻿using BusinessObject.Models;
+﻿using Aspose.Pdf;
+using AutoMapper;
+using BusinessObject.Models;
 using BusinessObject.Res;
+using DocumentFormat.OpenXml.Spreadsheet;
 using eStore.Config;
+using EStoreAPI.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace eStore.Controllers
 {
@@ -12,7 +17,7 @@ namespace eStore.Controllers
         [Authorize(Roles = "1")]
         public async Task<IActionResult> OrderManager(
            [FromQuery] PaginationParams @params,
-          
+
            DateTime? from,
            DateTime? to)
         {
@@ -30,7 +35,7 @@ namespace eStore.Controllers
 
             var orders = JsonConvert.DeserializeObject<List<OrderRes>>(Res.Content.ReadAsStringAsync().Result);
             var pagination = JsonConvert.DeserializeObject<PaginationMetadata>(Res.Headers.GetValues("X-Pagination").FirstOrDefault()!);
-         
+
             if (from is not null) ViewData["from"] = DateTime.Parse(from.ToString()!).ToString("yyyy-MM-dd");
             if (to is not null) ViewData["to"] = DateTime.Parse(to.ToString()!).ToString("yyyy-MM-dd");
 
@@ -58,6 +63,33 @@ namespace eStore.Controllers
 
             ViewData["pagination"] = pagination;
             return View(orders);
+        }
+
+        public async Task<IActionResult> Download()
+        {
+            var conn = $"api/Orders/10303";
+            var Res = await ResponseConfig.GetData(conn);
+            var order = JsonConvert.DeserializeObject<OrderRes>(Res.Content.ReadAsStringAsync().Result);
+            string body = InvoiceConfig.GetBody(order, "nguyengiangnamtb01%40gmail.com");
+            {
+                HtmlLoadOptions objLoadOptions = new HtmlLoadOptions();
+                objLoadOptions.PageInfo.Margin.Bottom = 10;
+                objLoadOptions.PageInfo.Margin.Top = 20;
+
+                Document document = new Document(new MemoryStream(Encoding.UTF8.GetBytes(body)), objLoadOptions);
+                FileContentResult pdf;
+
+                using (var stream = new MemoryStream())
+                {
+                    document.Save(stream);
+                    pdf = new FileContentResult(stream.ToArray(), "application/pdf")
+                    {
+                        FileDownloadName = "Order.pdf"
+                    };
+
+                }
+                return pdf;
+            }
         }
     }
 }

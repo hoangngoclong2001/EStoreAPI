@@ -455,20 +455,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var employee in Model)
+                                    @foreach (var employe in Model)
                                     {
                                         <tr>
-                                            <td>#@employee.EmployeeId</td>
+                                            <td>#@employe.EmployeeId</td>
                                             <td>
                                                 <div class="client">
                                                     <div class="client-~/images/ bg-~/images/"
                                                      style="background-image: url(~/images//3.jpeg)">
                                                     </div>
                                                     <div class="client-info">
-                                                        <h4>@employee.LastName @employee.FirstName</h4>
-                                                        @if (employee.Email is not null)
+                                                        <h4>@employe.LastName @employe.FirstName</h4>
+                                                        @if (employe.Email is not null)
                                                         {
-                                                            <small>@employee.Email</small>
+                                                            <small>@employe.Email</small>
                                                         }
                                                         else
                                                         {
@@ -478,24 +478,24 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @employee.Department
+                                                @employe.Department
                                             </td>
                                             <td>
-                                                @employee.HireDateString
+                                                @employe.HireDateString
                                             </td>
                                             <td>
-                                                @employee.TitleOfCourtesy
+                                                @employe.TitleOfCourtesy
                                             </td>
                                             <td>
-                                                @employee.Title
+                                                @employe.Title
                                             </td>
                                             <td>
-                                                @employee.Address
+                                                @employe.Address
                                             </td>
                                             <td>
                                                 <div class="actions">
-                                                    <a asp-action="status" asp-route-id="@employee.EmployeeId"><span class="las la-eye"></span></a>
-                                                    <a asp-action="edit" asp-route-id="@employee.EmployeeId"><span class="las la-ellipsis-v"></span></a>
+                                                    <a asp-action="status" asp-route-id="@employe.EmployeeId"><span class="las la-eye"></span></a>
+                                                    <a asp-action="edit" asp-route-id="@employe.EmployeeId"><span class="las la-ellipsis-v"></span></a>
                                                 </div>
                                             </td>
                                         </tr>
