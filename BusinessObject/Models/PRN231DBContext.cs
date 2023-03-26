@@ -284,11 +284,9 @@ namespace BusinessObject.Models
             });
             modelBuilder.Entity<Page>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.Id).HasColumnName("PageId");
 
-                entity.ToTable("Page");
-
-                entity.Property(e => e.Total).HasColumnName("total");
+                entity.Property(e => e.Total).HasColumnName("Total");
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>
