@@ -150,7 +150,7 @@ namespace EStoreAPI.Controllers
         public ActionResult<UserRes> RefreshToken(UserRes u)
         {
             var refreshToken = u.RefreshToken;
-
+            if (user.RefreshToken is null) return BadRequest();
             if (!user.RefreshToken!.Equals(refreshToken)) return Unauthorized("Invalid Refresh Token.");
             else if (user.TokenExpires < DateTime.Now) return Unauthorized("Token expired.");
             string token = JWTConfig.CreateToken(user, configuration);

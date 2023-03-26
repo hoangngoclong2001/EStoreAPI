@@ -22,6 +22,7 @@ namespace EStoreAPI.Controllers
     {
         private readonly IConfiguration configuration;
         private IOrderRepo repository = new OrderRepo();
+        private IProductRepo repo = new ProductRepo();
         private IMapper mapper;
         public OrdersController(IMapper _mapper, IConfiguration configuration)
         {
@@ -56,8 +57,8 @@ namespace EStoreAPI.Controllers
             if (order is null || email is null) return BadRequest();
             var isSave = await repository.Save(order);
             if (!isSave) return Conflict();
-            //send mail
-            var isSend = MailConfig.SendOrderMail(mapper.Map<OrderRes>(order), email, configuration);
+            var orderToSend = await repository.Order(order.OrderId);
+            var isSend = MailConfig.SendOrderMail(mapper.Map<OrderRes>(orderToSend), email, configuration);
             return Ok(isSend);
         }
 

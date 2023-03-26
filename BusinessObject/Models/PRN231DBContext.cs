@@ -104,6 +104,8 @@ namespace BusinessObject.Models
                 entity.Property(e => e.ContactName).HasMaxLength(30);
 
                 entity.Property(e => e.ContactTitle).HasMaxLength(30);
+
+                entity.Property(e => e.Picture).HasColumnType("image");
             });
 
             modelBuilder.Entity<Department>(entity =>

@@ -32,9 +32,9 @@ namespace BusinessObject.Mapper
                 opt => opt.MapFrom(src => src.OrderDetails));
             CreateMap<OrderDetail, OrderDetailRes>()
                 .ForMember(dest => dest.ProductName, 
-                opt => opt.MapFrom(src => src.Product.ProductName))
+                opt => opt.MapFrom(src => src.Product!.ProductName))
                 .ForPath(dest => dest.Category,
-                opt => opt.MapFrom(src => src.Product.Category!.CategoryName));
+                opt => opt.MapFrom(src => src.Product!.Category!.CategoryName));
 
         }
     }

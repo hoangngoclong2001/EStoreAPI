@@ -2,6 +2,7 @@
 using BusinessObject.Req;
 using BusinessObject.Res;
 using eStore.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ namespace eStore.Controllers
     public class ProductController : Controller
     {
 
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Products([FromQuery] PaginationParams @params, string? search, int? categoryId, int item)
         {
             if (@params.ItemsPerPage == 0) @params.ItemsPerPage = 10;
@@ -70,6 +72,7 @@ namespace eStore.Controllers
             return View(products);
         }
 
+        [Authorize(Roles = "1")]
         [HttpGet]
         [Route("/Product/delete/{id}")]
         public async Task<IActionResult> productdelete(string id)
@@ -85,7 +88,7 @@ namespace eStore.Controllers
             return Redirect("/Product/Products");
         }
 
-
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> EditProduct(int id)
         {
             var conn = $"api/products/{id}";
@@ -98,6 +101,7 @@ namespace eStore.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = "1")]
         [HttpPost]
         public async Task<IActionResult> EditProduct(ProductReq pmp, [FromForm] IFormFile fileImage)
         {
@@ -122,7 +126,7 @@ namespace eStore.Controllers
             return RedirectToAction("Products");
         }
 
-
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> AddProduct()
         {
 
@@ -133,6 +137,7 @@ namespace eStore.Controllers
             return View();
         }
 
+        [Authorize(Roles = "1")]
         [HttpPost]
         public async Task<IActionResult> AddProduct(ProductReq pmp, [FromForm] IFormFile fileImage)
         {
