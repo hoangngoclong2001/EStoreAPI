@@ -1,6 +1,8 @@
 ﻿using BusinessObject.Models;
 using BusinessObject.Req;
 using BusinessObject.Res;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.VariantTypes;
 using eStore.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,31 +51,31 @@ namespace eStore.Controllers
                 : $"{conn}&to={DateTime.Parse(to.ToString()!).ToString("MM/dd/yyyy")}";
 
             var _conn = $"api/Departments/selectlist";
-            var Res = await ResponseConfig.GetData(conn);
-            var _Res = await ResponseConfig.GetData(_conn);
+            var Res = await ResponseConfig.GetData(conn, GetCookie());
+
+            var _Res = await ResponseConfig.GetData(_conn, GetCookie());
 
             var employees = JsonConvert.DeserializeObject<List<EmpRes>>(Res.Content.ReadAsStringAsync().Result);
             var pagination = JsonConvert.DeserializeObject<PaginationMetadata>(Res.Headers.GetValues("X-Pagination").FirstOrDefault()!);
             List<DepSelectRes>? depart = JsonConvert.DeserializeObject<List<DepSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
 
 
-
             var con3 = $"api/Accounts/totalCustomersAccounts";
-            var Res3 = await ResponseConfig.GetData(con3);
+            var Res3 = await ResponseConfig.GetData(con3, GetCookie());
 
             var a = JsonConvert.DeserializeObject(Res3.Content.ReadAsStringAsync().Result);
 
             ViewBag.TotalCustomer = a;
 
             var con4 = $"api/Accounts/Page";
-            var Res4 = await ResponseConfig.GetData(con4);
+            var Res4 = await ResponseConfig.GetData(con4, GetCookie());
 
             var viewPage = JsonConvert.DeserializeObject(Res4.Content.ReadAsStringAsync().Result);
 
             ViewBag.ViewPage = viewPage;
 
             var con5 = $"api/Orders/OrderMonth";
-            var Res5 = await ResponseConfig.GetData(con5);
+            var Res5 = await ResponseConfig.GetData(con5, GetCookie());
 
             var renuve = JsonConvert.DeserializeObject(Res5.Content.ReadAsStringAsync().Result);
 
@@ -81,7 +83,7 @@ namespace eStore.Controllers
 
 
             var con6 = $"api/Accounts/totalEmployeesAccounts";
-            var Res6 = await ResponseConfig.GetData(con6);
+            var Res6 = await ResponseConfig.GetData(con6, GetCookie());
 
             var employee = JsonConvert.DeserializeObject(Res6.Content.ReadAsStringAsync().Result);
 
@@ -105,7 +107,7 @@ namespace eStore.Controllers
             if (file == null) return RedirectToAction("Employees");
             var bytes = new byte[file.OpenReadStream().Length + 1];
             file.OpenReadStream().Read(bytes, 0, bytes.Length);
-            var Res = await ResponseConfig.UploadData("api/Accounts/import-employees", bytes, file.FileName);
+            var Res = await ResponseConfig.UploadData("api/Accounts/import-employees", bytes, file.FileName, GetCookie());
             return RedirectToAction("Employees");
         }
 
@@ -114,8 +116,8 @@ namespace eStore.Controllers
         {
             var conn = $"api/Employees/{id}";
             var _conn = $"api/Departments/selectlist";
-            var Res = await ResponseConfig.GetData(conn);
-            var _Res = await ResponseConfig.GetData(_conn);
+            var Res = await ResponseConfig.GetData(conn, GetCookie());
+            var _Res = await ResponseConfig.GetData(_conn, GetCookie());
             var employee = JsonConvert.DeserializeObject<EmpRes>(Res.Content.ReadAsStringAsync().Result);
             List<DepSelectRes>? depart = JsonConvert.DeserializeObject<List<DepSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
             ViewBag.departments = depart;
@@ -149,10 +151,10 @@ namespace eStore.Controllers
             };
             var conn = $"api/Employees/{emp.EmployeeId}";
             var _conn = $"api/Accounts/add-edit-account";
-            var Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(req));
+            var Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(req), GetCookie());
             if (emp.Password is not null)
             {
-                var _Res = await ResponseConfig.PostData(_conn, JsonConvert.SerializeObject(empSignUpReq));
+                var _Res = await ResponseConfig.PostData(_conn, JsonConvert.SerializeObject(empSignUpReq), GetCookie());
             }
             return RedirectToAction("Employees");
         }
@@ -161,7 +163,7 @@ namespace eStore.Controllers
         public async Task<IActionResult> Status(int id)
         {
             var conn = $"api/Employees/{id}";
-            var Res = await ResponseConfig.GetData(conn);
+            var Res = await ResponseConfig.GetData(conn, GetCookie());
             var emp = JsonConvert.DeserializeObject<EmpRes>(Res.Content.ReadAsStringAsync().Result);
             EmpReq req = new EmpReq
             {
@@ -178,8 +180,19 @@ namespace eStore.Controllers
                 HireDate = emp.HireDate,
                 Address = emp.Address,
             };
-            var _Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(req));
+            var _Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(req), GetCookie());
             return RedirectToAction("Employees");
         }
+
+        private string? GetCookie()
+        {
+            var cookies = "";
+            if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
+            {
+                cookies = HttpContext.Request.Cookies["accessToken"];
+            }
+            return cookies;
+        }
     }
+
 }

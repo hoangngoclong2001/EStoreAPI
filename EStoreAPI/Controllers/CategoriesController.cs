@@ -45,7 +45,7 @@ namespace EStoreAPI.Controllers
             return cate is null ? NotFound() : Ok(mapper.Map<CateRes>(cate));
         }
 
-    //    [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpPost]
         public async Task<IActionResult> Post(CateReq cate)
         {
@@ -55,7 +55,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-  //      [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpPost]
         [Route("export")]
         public async Task<IActionResult> Post()
@@ -76,7 +76,7 @@ namespace EStoreAPI.Controllers
             }
         }
 
-  //      [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int? id, CateReq req)
         {
@@ -86,7 +86,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-   //     [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int? id)
         {

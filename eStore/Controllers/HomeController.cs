@@ -34,6 +34,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index([FromQuery] PaginationParams @params, string? search, int? categoryId)
     {
+
         if (@params.ItemsPerPage == 0) @params.ItemsPerPage = 8;
         var conn2 = string.IsNullOrEmpty(search)
                ? $"api/Products?Page={@params.Page}&ItemsPerPage={@params.ItemsPerPage}"
@@ -41,16 +42,13 @@ public class HomeController : Controller
         conn2 = categoryId is null
                ? $"{conn2}"
                : $"{conn2}&categoryId={categoryId}";
-
-
-
         var conn1 = $"api/Products/sale";
         var conn = $"api/Products/top4";
         var _conn = $"api/Categories/selectlist";
-        var _Res2 = await ResponseConfig.GetData(conn2);
-        var Res = await ResponseConfig.GetData(conn);
-        var _Res = await ResponseConfig.GetData(_conn);
-        var _Res1 = await ResponseConfig.GetData(conn1);
+        var _Res2 = await ResponseConfig.GetData(conn2, GetCookie());
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
+        var _Res = await ResponseConfig.GetData(_conn, GetCookie());
+        var _Res1 = await ResponseConfig.GetData(conn1, GetCookie());
         var products = JsonConvert.DeserializeObject<List<ProductRes>>(_Res2.Content.ReadAsStringAsync().Result);
         List<CateSelectRes>? category = JsonConvert.DeserializeObject<List<CateSelectRes>>(_Res.Content.ReadAsStringAsync().Result);
         List<ProductRes>? productlastest = JsonConvert.DeserializeObject<List<ProductRes>>(Res.Content.ReadAsStringAsync().Result);
@@ -66,7 +64,7 @@ public class HomeController : Controller
 
 
         var con4 = $"api/Accounts/Page";
-        var Res4 = await ResponseConfig.GetData(con4);
+        var Res4 = await ResponseConfig.GetData(con4, GetCookie());
 
         var viewPage = JsonConvert.DeserializeObject<PageRes>(Res4.Content.ReadAsStringAsync().Result);
 
@@ -77,7 +75,7 @@ public class HomeController : Controller
         };
 
         var conn6 = $"api/Accounts/Page";
-        var Res5 = ResponseConfig.PutData(conn6, JsonConvert.SerializeObject(req123));
+        var Res5 = ResponseConfig.PutData(conn6, JsonConvert.SerializeObject(req123), GetCookie());
 
         return View(products);
 
@@ -87,10 +85,11 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> UploadImg(IFormFile file, string customerId)
     {
+
         var bytes = new byte[file.OpenReadStream().Length + 1];
         file.OpenReadStream().Read(bytes, 0, bytes.Length);
         var conn = $"api/Customers/UploadImage/{customerId}";
-        var Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(bytes));
+        var Res = await ResponseConfig.PutData(conn, JsonConvert.SerializeObject(bytes), GetCookie());
         return RedirectToAction("Profile");
     }
 
@@ -103,10 +102,10 @@ public class HomeController : Controller
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email= email ?? string.Empty;   
         var conn = $"api/Accounts/getEmail/{email}";
-        var Res = await ResponseConfig.GetData(conn);
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
         var conn1 = $"api/Customers/{account!.CustomerId}";
-        var Res2 = await ResponseConfig.GetData(conn1);
+        var Res2 = await ResponseConfig.GetData(conn1, GetCookie());
         var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
         ViewBag.Customer = cus;
         return View(account);
@@ -121,11 +120,11 @@ public class HomeController : Controller
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email = email ?? string.Empty;
         var conn = $"api/Accounts/getEmail/{email}";
-        var Res = await ResponseConfig.GetData(conn);
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
       
         var conn1 = $"api/Customers/{account!.CustomerId}";
-        var Res2 = await ResponseConfig.GetData(conn1);
+        var Res2 = await ResponseConfig.GetData(conn1, GetCookie());
         var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
 
         return View(cus);
@@ -152,7 +151,7 @@ public class HomeController : Controller
         email = email ?? string.Empty;
 
         var conn = $"api/Accounts/getEmail/{email}";
-        var Res = await ResponseConfig.GetData(conn);
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
 
         AccRes req = new AccRes
@@ -167,7 +166,7 @@ public class HomeController : Controller
         };
 
         var _conn = $"api/Accounts/{email}";
-        var Res2 = ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
+        var Res2 = ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req), GetCookie());
 
         return RedirectToAction("Profile");
     }
@@ -187,7 +186,7 @@ public class HomeController : Controller
         };
 
         var _conn = $"api/Customers/{req.CustomerId}";
-        var Res = await ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req));
+        var Res = await ResponseConfig.PutData(_conn, JsonConvert.SerializeObject(req), GetCookie());
 
         return RedirectToAction("Profile");
     }
@@ -202,7 +201,7 @@ public class HomeController : Controller
     [Route("/cart")]
     public async Task<IActionResult> cart([FromForm] OrderDto orderDto)
     {
-        var _Res = await ResponseConfig.GetData("api/Products/allProductName");
+        var _Res = await ResponseConfig.GetData("api/Products/allProductName", GetCookie());
         var allProductName = JsonConvert.DeserializeObject<List<string>>(_Res.Content.ReadAsStringAsync().Result);
         if (allProductName == null)
             return StatusCode(StatusCodes.Status500InternalServerError);
@@ -344,11 +343,11 @@ public class HomeController : Controller
                             return Redirect("/Home/Index");
 
                         var conn = $"api/Accounts/getEmail/{email}";
-                        var AccRes = await ResponseConfig.GetData(conn);
+                        var AccRes = await ResponseConfig.GetData(conn, GetCookie());
                         var account = JsonConvert.DeserializeObject<AccRes>(AccRes.Content.ReadAsStringAsync().Result);
 
                         var conn1 = $"api/Customers/{account!.CustomerId}";
-                        var Res2 = await ResponseConfig.GetData(conn1);
+                        var Res2 = await ResponseConfig.GetData(conn1, GetCookie());
                         var cus = JsonConvert.DeserializeObject<CusRes>(Res2.Content.ReadAsStringAsync().Result);
 
                         List<OrderDetail> orderDetail = new List<OrderDetail>();
@@ -378,7 +377,7 @@ public class HomeController : Controller
                             };
 
                             var a = JsonConvert.SerializeObject(order);
-                            var Res = await ResponseConfig.PostData($"api/Orders/save/{email}", JsonConvert.SerializeObject(order));
+                            var Res = await ResponseConfig.PostData($"api/Orders/save/{email}", JsonConvert.SerializeObject(order), GetCookie());
                             if (!Res.IsSuccessStatusCode)
                                 return StatusCode(StatusCodes.Status500InternalServerError);
                             HttpContext.Session.Remove("cart");
@@ -391,7 +390,7 @@ public class HomeController : Controller
     }
     public async Task AddToCart(List<OrderDetailDTO> cart, string name)
     {
-        var Res = await ResponseConfig.GetData("api/Products/GetProductbyName/" + name);
+        var Res = await ResponseConfig.GetData("api/Products/GetProductbyName/" + name, GetCookie());
         var P = JsonConvert.DeserializeObject<Product>(Res.Content.ReadAsStringAsync().Result);
         decimal Total = (decimal)P!.UnitPrice! * 1;
         cart.Add(new OrderDetailDTO { Product = P, Quantity = 1, Total = Total });
@@ -404,8 +403,8 @@ public class HomeController : Controller
         var conn = $"api/Products/{id}";
 
         var _conn = $"api/Categories/selectlist";
-        var _Res = await ResponseConfig.GetData(_conn);
-        var Res = await ResponseConfig.GetData(conn);
+        var _Res = await ResponseConfig.GetData(_conn, GetCookie());
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
 
         ProductRes products = JsonConvert.DeserializeObject<ProductRes>(Res.Content.ReadAsStringAsync().Result!)!;
 
@@ -427,7 +426,7 @@ public class HomeController : Controller
             UserRes u = new UserRes();
             u.RefreshToken = HttpContext.Request.Cookies["refreshToken"];
             var conn = $"api/Accounts/refresh-token";
-            var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(u));
+            var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(u), GetCookie());
             if (!Res.IsSuccessStatusCode)
             {
                 Response.Cookies.Delete("refreshToken");
@@ -455,7 +454,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Login(AuthReq req)
     {
         var conn = $"api/Accounts/signin";
-        var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(req));
+        var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(req), GetCookie());
         if (!Res.IsSuccessStatusCode)
         {
             TempData["ErrorMessage"] = "Wrong email or password";
@@ -483,22 +482,22 @@ public class HomeController : Controller
     public async Task<IActionResult> Signup(SignUpReq req)
     {
         var conn = $"api/Accounts/signup";
-        var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(req));
+        var Res = await ResponseConfig.PostData(conn, JsonConvert.SerializeObject(req), GetCookie());
         if (!Res.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
         return RedirectToAction("Signup");
     }
 
     [HttpGet]
-    public async Task<IActionResult> Forgot()
+    public IActionResult Forgot()
     {
         return View();
     }
 
-        [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> Forgot(string email)
     {
         var conn = $"api/Accounts/reset?email={email}";
-        var Res = await ResponseConfig.GetData(conn);
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
         if (!Res.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
         return RedirectToAction("Forgot");
     }
@@ -529,11 +528,11 @@ public class HomeController : Controller
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         email = email ?? string.Empty;
         var conn = $"api/Accounts/getEmail/{email}";
-        var Res = await ResponseConfig.GetData(conn);
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
         var account = JsonConvert.DeserializeObject<AccRes>(Res.Content.ReadAsStringAsync().Result);
 
         var conn2 = $"api/Orders/customer/{account.CustomerId}";
-         var Res2 = await ResponseConfig.GetData(conn2);
+         var Res2 = await ResponseConfig.GetData(conn2, GetCookie());
         var oreder = JsonConvert.DeserializeObject<List<OrderRes>>(Res2.Content.ReadAsStringAsync().Result);
 
 
@@ -548,7 +547,7 @@ public class HomeController : Controller
         var claims = identity.Claims.ToList();
         var email = claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         var conn = $"api/Orders/{orderId}";
-        var Res = await ResponseConfig.GetData(conn);
+        var Res = await ResponseConfig.GetData(conn, GetCookie());
         var order = JsonConvert.DeserializeObject<OrderRes>(Res.Content.ReadAsStringAsync().Result);
         string body = InvoiceConfig.GetBody(order!, email);
         {
@@ -611,5 +610,15 @@ public class HomeController : Controller
         {
             throw new Exception(ex.Message);
         }
+    }
+
+    private string? GetCookie()
+    {
+        var cookies = "";
+        if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
+        {
+            cookies = HttpContext.Request.Cookies["accessToken"];
+        }
+        return cookies;
     }
 }

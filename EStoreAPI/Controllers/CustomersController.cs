@@ -20,7 +20,7 @@ namespace EStoreAPI.Controllers
         private IMapper mapper;
         public CustomersController(IMapper _mapper) => mapper = _mapper;
 
-       
+        [Authorize(Policy = "EmpOnly")]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PaginationParams @params, string? name, string? title)
         {
@@ -30,6 +30,7 @@ namespace EStoreAPI.Controllers
             return Ok(data.Select(mapper.Map<Customer, CusRes>).ToList());
         }
 
+        [Authorize(Policy = "EmpOnly")]
         [HttpGet("select")]
         public async Task<IActionResult> GetSelect()
         {
@@ -37,6 +38,7 @@ namespace EStoreAPI.Controllers
             return Ok(data.Select(mapper.Map<Customer, CusSelectRes>).ToHashSet());
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string? id)
         {
@@ -45,7 +47,7 @@ namespace EStoreAPI.Controllers
             return customer is null ? NotFound() : Ok(mapper.Map<CusRes>(customer));
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(CusReq cus)
         {
@@ -55,7 +57,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string? id, CusReq req)
         {
@@ -66,7 +68,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-        
+        [Authorize]
         [HttpPut]
         [Route("UploadImage/{id}")]
         public async Task<IActionResult> Put(string? id, byte[] bytes)
@@ -78,7 +80,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string? id)
         {

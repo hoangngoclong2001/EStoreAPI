@@ -31,7 +31,7 @@ namespace eStore.Controllers
                 ? $"{conn}"
                 : $"{conn}&to={DateTime.Parse(to.ToString()!).ToString("MM/dd/yyyy")}";
 
-            var Res = await ResponseConfig.GetData(conn);
+            var Res = await ResponseConfig.GetData(conn, GetCookie());
 
             var orders = JsonConvert.DeserializeObject<List<OrderRes>>(Res.Content.ReadAsStringAsync().Result);
             var pagination = JsonConvert.DeserializeObject<PaginationMetadata>(Res.Headers.GetValues("X-Pagination").FirstOrDefault()!);
@@ -41,21 +41,21 @@ namespace eStore.Controllers
 
 
             var con3 = $"api/Accounts/totalCustomersAccounts";
-            var Res3 = await ResponseConfig.GetData(con3);
+            var Res3 = await ResponseConfig.GetData(con3, GetCookie());
 
             var a = JsonConvert.DeserializeObject(Res3.Content.ReadAsStringAsync().Result);
 
             ViewBag.TotalCustomer = a;
 
             var con4 = $"api/Accounts/Page";
-            var Res4 = await ResponseConfig.GetData(con4);
+            var Res4 = await ResponseConfig.GetData(con4, GetCookie());
 
             var viewPage = JsonConvert.DeserializeObject(Res4.Content.ReadAsStringAsync().Result);
 
             ViewBag.ViewPage = viewPage;
 
             var con5 = $"api/Orders/OrderMonth";
-            var Res5 = await ResponseConfig.GetData(con5);
+            var Res5 = await ResponseConfig.GetData(con5, GetCookie());
 
             var renuve = JsonConvert.DeserializeObject(Res5.Content.ReadAsStringAsync().Result);
 
@@ -63,6 +63,16 @@ namespace eStore.Controllers
 
             ViewData["pagination"] = pagination;
             return View(orders);
+        }
+
+        private string? GetCookie()
+        {
+            var cookies = "";
+            if (!string.IsNullOrEmpty(HttpContext.Request.Cookies["accessToken"]))
+            {
+                cookies = HttpContext.Request.Cookies["accessToken"];
+            }
+            return cookies;
         }
     }
 }

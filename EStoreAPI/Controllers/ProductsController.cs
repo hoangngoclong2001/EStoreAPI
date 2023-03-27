@@ -69,8 +69,8 @@ namespace EStoreAPI.Controllers
             var product = await repository.Product(id);
             return product is null ? NotFound() : Ok(mapper.Map<ProductRes>(product));
         }
-        [AllowAnonymous]
-      //  [Authorize(Policy = "EmpOnly")]
+
+        [Authorize(Policy = "EmpOnly")]
         [HttpPost]
         public async Task<IActionResult> Post(ProductReq product)
         {
@@ -113,8 +113,7 @@ namespace EStoreAPI.Controllers
             }
         }
 
-        //   [Authorize(Policy = "EmpOnly")]
-        [AllowAnonymous]
+        [Authorize(Policy = "EmpOnly")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int? id, ProductReq req)
         {
@@ -124,8 +123,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-        // [Authorize(Policy = "EmpOnly")]
-        [AllowAnonymous]
+        [Authorize(Policy = "EmpOnly")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int? id)
         {

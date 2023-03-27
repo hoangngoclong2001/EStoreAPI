@@ -20,7 +20,7 @@ namespace EStoreAPI.Controllers
         private IMapper mapper;
         public DepartmentsController(IMapper _mapper) => mapper = _mapper;
 
-  //      [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PaginationParams @params, string? name)
         {
@@ -30,7 +30,7 @@ namespace EStoreAPI.Controllers
             return Ok(data.Select(mapper.Map<Department, DepRes>).ToList());
         }
 
-  //      [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int? id)
         {
@@ -39,7 +39,7 @@ namespace EStoreAPI.Controllers
             return department is null ? NotFound() : Ok(mapper.Map<DepRes>(department));
         }
 
-    //    [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpPost]
         public async Task<IActionResult> Post(DepReq dep)
         {
@@ -49,7 +49,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-   //     [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int? id, DepReq dep)
         {
@@ -59,7 +59,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-  //      [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int? id)
         {

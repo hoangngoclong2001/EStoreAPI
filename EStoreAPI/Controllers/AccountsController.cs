@@ -33,7 +33,7 @@ namespace EStoreAPI.Controllers
             mapper = _mapper;
         }
 
-   //     [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpGet]
         [Route("totalCustomersAccounts")]
         public async Task<IActionResult> GetTotalCustomers()
@@ -42,7 +42,7 @@ namespace EStoreAPI.Controllers
             return Ok(data.Count());
         }
 
-   //     [Authorize(Policy = "EmpOnly")]
+        [Authorize(Policy = "EmpOnly")]
         [HttpGet]
         [Route("totalEmployeesAccounts")]
         public async Task<IActionResult> GetTotalEmployees()
@@ -77,6 +77,7 @@ namespace EStoreAPI.Controllers
         {
             if (email is null) return BadRequest();
             var resetPassword = await repository.Account(email);
+
             return resetPassword is null ? NotFound() : Ok(MailConfig.SendRecoveryMail(email, resetPassword, configuration));
         }
         [AllowAnonymous]
@@ -90,6 +91,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
+        [Authorize]
         [HttpPost]
         [Route("import-employees")]
         public async Task<IActionResult> Post(IFormFile file)

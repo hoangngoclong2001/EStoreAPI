@@ -82,7 +82,15 @@ namespace DataAccess.DAO
             using (var context = new PRN231DBContext())
             {
                 account = await context.Accounts.Where(a => a.Email!.Equals(email)).FirstOrDefaultAsync();
-                return account is not null ? RandomUtils.GenerateNewPassword(8) : null;
+                if(account is not null)
+                {
+                     var newPassword = RandomUtils.GenerateNewPassword(8);
+                    account.Password = newPassword;
+                    context.Entry<Account>(account).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    return newPassword;
+                }
+                return null;
             }
         }
 

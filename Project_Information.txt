@@ -1,0 +1,2 @@
+- Cách tạo mật khẩu ứng dụng (dùng cho phần send mail ạ) :
+ https://123host.vn/tailieu/kb/hosting/huong-dan-tao-mat-khau-ung-dung-cho-gmail.html
