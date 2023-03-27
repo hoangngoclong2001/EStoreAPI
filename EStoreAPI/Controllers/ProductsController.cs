@@ -124,7 +124,7 @@ namespace EStoreAPI.Controllers
             return Conflict();
         }
 
-        //  [Authorize(Policy = "EmpOnly")]
+        // [Authorize(Policy = "EmpOnly")]
         [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int? id)

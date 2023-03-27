@@ -74,13 +74,12 @@ namespace eStore.Controllers
 
         [Authorize(Roles = "1")]
         [HttpGet]
-        [Route("/Product/delete/{id}")]
         public async Task<IActionResult> productdelete(string id)
         {
-            var conn = $"api/Products/delete/{id}";
+            var conn = $"api/Products/{id}";
 
 
-            var Res = await ResponseConfig.GetData(conn);
+            var Res = await ResponseConfig.DeleteData(conn);
 
             if (!Res.IsSuccessStatusCode)
                 return StatusCode(StatusCodes.Status500InternalServerError);

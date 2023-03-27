@@ -182,7 +182,7 @@
                                     }
                                     @if (search is not null)
                                     {
-                                        <input type="hidden" name="searcj" value="@search">
+                                        <input type="hidden" name="search" value="@search">
                                     }
                                     <select name="Item" onchange="this.form.submit()">
                                         @if (ViewBag.Item == 10)
@@ -338,8 +338,9 @@
                                             </td>
                                             <td>
                                                 <div class="actions">
-                                                    <a href="/Products/Delete/@product.ProductId"> <span class="las la-eye"></span></a>
 
+                                                    <a asp-action="productdelete" asp-route-id="@product.ProductId"> <span class="las la-eye"></span></a>
+                                                
                                                     <a asp-action="EditProduct" asp-route-id="@product.ProductId"><span class="las la-ellipsis-v"></span></a>
 
                                                 </div>

@@ -71,7 +71,7 @@ namespace EStoreAPI.Controllers
             return accounts is null ? NotFound() : Ok(mapper.Map<AccRes>(accounts));
         }
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         [Route("reset")]
         public async Task<IActionResult> Get(string? email)
         {

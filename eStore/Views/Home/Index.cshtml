@@ -82,7 +82,7 @@
               
                 else if (((ClaimsIdentity)User.Identity).HasClaim(ClaimTypes.Role, "1"))
                 {
-                    <a href="https://localhost:7290/Product/Products" style="font-size: 35px; margin-right: 20px;"><i class="fa fa-tasks"></i></a>
+                    <a href="https://localhost:7290/Employee/Employees" style="font-size: 35px; margin-right: 20px;"><i class="fa fa-tasks"></i></a>
                     <a href="https://localhost:7290/logout" style="font-size: 35px;margin-right: 20px;"><i class="fa fa-sign-out"></i></a>
                 }
                 else
@@ -144,7 +144,17 @@
                 {
                     <div class="item-container">
                         <div class="card-item">
-                            <img src="~/images/oppofindX2.jpg" alt="img"  class="shop-item-image" id="card-img">
+                            @{
+                                string imgDataURL = "";
+                                if (p.Picture is not null)
+                                {
+                                    string imgBase64 = Convert.ToBase64String(p.Picture);
+                                    imgDataURL = string.Format("data:image;base64,{0}", imgBase64);
+                                }
+                            }
+
+                            <img src="@imgDataURL" alt="img" class="shop-item-image" id="card-img">
+                       
                             <p>
                                 <a id="item-name" href="/Product/detail/@p.ProductId"> <span class="shop-item-title">@p.ProductName</span> </a>
                             </p>
@@ -174,7 +184,9 @@
                 {
                     <div class="item-container">
                         <div class="card-item">
-                            <img src="~/images/realme C11.jpg" alt="img" id="card-img">
+                           
+                            <img src="~/images/oppo17.jpg" alt="img" id="card-img">
+                         
                             <p>
                                 <a id="item-name" href="/Product/detail/@s.ProductId">@s.ProductName </a>
                             </p>
@@ -244,7 +256,7 @@
                                     }
                                 }
 
-                            <img url(@imgDataURL) alt="img" id="card-img">
+                            <img src="@imgDataURL" alt="img" id="card-img">
                             <p>
                                 <a id="item-name" href="/Product/detail/@product.ProductId">@product.ProductName</a>
                             </p>

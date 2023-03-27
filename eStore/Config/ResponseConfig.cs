@@ -50,7 +50,7 @@ namespace eStore.Config
             return Response;
         }
 
-        public static async Task<HttpResponseMessage> DeleteData(string targetAddress, string content)
+        public static async Task<HttpResponseMessage> DeleteData(string targetAddress)
         {
             var client = new HttpClient();
             client.BaseAddress = new Uri(BaseUrl);

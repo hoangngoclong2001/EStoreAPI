@@ -488,11 +488,16 @@ public class HomeController : Controller
         return RedirectToAction("Signup");
     }
 
- 
-    [HttpPost]
+    [HttpGet]
+    public async Task<IActionResult> Forgot()
+    {
+        return View();
+    }
+
+        [HttpPost]
     public async Task<IActionResult> Forgot(string email)
     {
-        var conn = $"api/Accounts/reset/{email}";
+        var conn = $"api/Accounts/reset?email={email}";
         var Res = await ResponseConfig.GetData(conn);
         if (!Res.IsSuccessStatusCode) return StatusCode(StatusCodes.Status500InternalServerError);
         return RedirectToAction("Forgot");
